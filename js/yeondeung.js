@@ -16,6 +16,7 @@
   const els = {};
   let currentDetailId = null;
   let pendingAction = null; // "edit" | "delete"
+  let localItems = []; // 마지막으로 불러온 목록의 로컬 캐시 (서버 지연과 무관하게 즉시 화면 갱신용)
 
   document.addEventListener("DOMContentLoaded", init);
 
@@ -66,13 +67,19 @@
   // ---------------------------------------------------------------------
   // 화면 전환
   // ---------------------------------------------------------------------
-  function showListView() {
+  function showListView(options) {
+    const opts = options || {};
     els.viewList.hidden = false;
     els.viewWrite.hidden = true;
     els.viewDetail.hidden = true;
     els.toolbar.style.display = "flex";
     history.replaceState(null, "", location.pathname);
-    loadList();
+
+    if (opts.skipReload) {
+      renderList(localItems);
+    } else {
+      loadList();
+    }
   }
 
   function showWriteView() {
@@ -101,34 +108,38 @@
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "목록을 불러오지 못했습니다.");
 
-      const items = data.items || [];
-      if (items.length === 0) {
-        els.list.innerHTML = '<li class="yd-list-empty">아직 등록된 발원 글이 없습니다. 첫 발원을 올려보세요.</li>';
-        return;
-      }
-
-      els.list.innerHTML = "";
-      items.forEach((item) => {
-        const li = document.createElement("li");
-        const a = document.createElement("a");
-        a.href = `#id=${encodeURIComponent(item.id)}`;
-        a.textContent = `[${item.lampType}] ${item.applicantName} 님의 발원`;
-        a.addEventListener("click", (e) => {
-          e.preventDefault();
-          openDetail(item.id);
-        });
-
-        const dateSpan = document.createElement("span");
-        dateSpan.className = "n-date";
-        dateSpan.textContent = formatDate(item.createdAt);
-
-        li.appendChild(a);
-        li.appendChild(dateSpan);
-        els.list.appendChild(li);
-      });
+      localItems = data.items || [];
+      renderList(localItems);
     } catch (err) {
       els.list.innerHTML = `<li class="yd-list-empty">${escapeText(err.message)}</li>`;
     }
+  }
+
+  function renderList(items) {
+    if (!items || items.length === 0) {
+      els.list.innerHTML = '<li class="yd-list-empty">아직 등록된 발원 글이 없습니다. 첫 발원을 올려보세요.</li>';
+      return;
+    }
+
+    els.list.innerHTML = "";
+    items.forEach((item) => {
+      const li = document.createElement("li");
+      const a = document.createElement("a");
+      a.href = `#id=${encodeURIComponent(item.id)}`;
+      a.textContent = `[${item.lampType}] ${item.applicantName} 님의 발원`;
+      a.addEventListener("click", (e) => {
+        e.preventDefault();
+        openDetail(item.id);
+      });
+
+      const dateSpan = document.createElement("span");
+      dateSpan.className = "n-date";
+      dateSpan.textContent = formatDate(item.createdAt);
+
+      li.appendChild(a);
+      li.appendChild(dateSpan);
+      els.list.appendChild(li);
+    });
   }
 
   // ---------------------------------------------------------------------
@@ -162,7 +173,19 @@
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "신청 중 오류가 발생했습니다.");
 
-      showListView();
+      // 서버 목록 재조회 없이, 방금 만든 글을 캐시 맨 앞에 즉시 추가합니다.
+      localItems = [
+        {
+          id: data.item.id,
+          applicantName: data.item.applicantName,
+          lampType: data.item.lampType,
+          createdAt: data.item.createdAt,
+          updatedAt: data.item.updatedAt || null,
+        },
+        ...localItems,
+      ];
+
+      showListView({ skipReload: true });
       openDetail(data.item.id);
     } catch (err) {
       els.writeError.textContent = err.message;
@@ -283,8 +306,12 @@
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "삭제할 수 없습니다.");
 
+      // 서버 저장소의 읽기 반영 지연과 무관하게, 화면에서는 즉시 해당 글을 제거합니다.
+      localItems = localItems.filter((item) => item.id !== currentDetailId);
+      currentDetailId = null;
+
       closePasswordModal();
-      showListView();
+      showListView({ skipReload: true });
     } catch (err) {
       els.pwError.textContent = err.message;
       els.pwError.hidden = false;
@@ -355,13 +382,26 @@
         const data = await res.json();
         if (!res.ok) throw new Error(data.error || "수정 중 오류가 발생했습니다.");
 
+        // 로컬 캐시의 해당 항목도 즉시 갱신 (목록에 보이는 이름/종류/날짜 등)
+        localItems = localItems.map((it) =>
+          it.id === data.item.id
+            ? {
+                id: data.item.id,
+                applicantName: data.item.applicantName,
+                lampType: data.item.lampType,
+                createdAt: data.item.createdAt,
+                updatedAt: data.item.updatedAt || null,
+              }
+            : it
+        );
+
         // 원래 상태로 폼 복구
         form.removeEventListener("submit", editSubmitHandler);
         form.addEventListener("submit", originalSubmitHandler);
         document.querySelector(".yd-form-title").textContent = "연등(초) 발원 신청";
         pwField.style.display = "";
 
-        showListView();
+        showListView({ skipReload: true });
         openDetail(item.id);
       } catch (err) {
         els.writeError.textContent = err.message;

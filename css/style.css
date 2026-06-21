@@ -234,18 +234,30 @@ textarea:focus-visible {
 }
 
 .sub-nav {
-  position: absolute;
-  top: 100%;
-  left: -1rem;
-  min-width: 200px;
-  background: var(--white);
-  border: 1px solid var(--line);
-  box-shadow: 0 12px 30px rgba(28, 26, 24, 0.08);
-  padding: 0.5rem 0;
+  position: fixed;
+  top: 84px;
+  left: 0;
+  right: 0;
+  width: 100%;
+  margin: 0;
+  padding: 0.9rem 0;
+  list-style: none;
+  background: var(--paper);
+  border-bottom: 1px solid var(--line);
+  box-shadow: 0 12px 24px rgba(28, 26, 24, 0.06);
   opacity: 0;
   visibility: hidden;
   transform: translateY(-6px);
   transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--space-5);
+}
+.sub-nav li {
+  margin: 0;
+  padding: 0;
 }
 .main-nav > li:hover .sub-nav,
 .main-nav > li:focus-within .sub-nav {
@@ -255,14 +267,26 @@ textarea:focus-visible {
 }
 .sub-nav li a {
   display: block;
-  padding: 0.65rem 1.2rem;
-  font-size: 0.9rem;
+  padding: 0.4rem 0;
+  font-size: 0.94rem;
   color: var(--ink);
   white-space: nowrap;
+  position: relative;
+}
+.sub-nav li a::after {
+  content: "";
+  position: absolute;
+  left: 0; bottom: -2px;
+  width: 0%;
+  height: 2px;
+  background: var(--danchong);
+  transition: width 0.2s ease;
 }
 .sub-nav li a:hover {
-  background: var(--paper);
   color: var(--danchong);
+}
+.sub-nav li a:hover::after {
+  width: 100%;
 }
 
 .nav-toggle {
@@ -877,11 +901,20 @@ textarea:focus-visible {
     position: static;
     opacity: 1; visibility: visible; transform: none;
     display: none;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0;
     border: 0;
     box-shadow: none;
     padding: 0 0 0.5rem 1rem;
   }
-  .main-nav.is-mobile-open li.is-expanded .sub-nav { display: block; }
+  .main-nav.is-mobile-open li.is-expanded .sub-nav { display: flex; }
+  .sub-nav li a {
+    padding: 0.6rem 0;
+  }
+  .sub-nav li a::after {
+    display: none;
+  }
 
   .hero-title { font-size: clamp(1.8rem, 8vw, 2.6rem); }
   .hero-scroll { display: none; }
