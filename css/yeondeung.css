@@ -1,0 +1,205 @@
+/* ==========================================================================
+   연등(초) 발원 게시판 - 전용 스타일
+   ========================================================================== */
+
+/* ---- 폼 레이아웃 ---- */
+.yd-form-wrap {
+  background: var(--white);
+  border: 1px solid var(--line);
+  padding: var(--space-4);
+}
+
+.yd-form-title {
+  font-size: 1.3rem;
+  margin-bottom: var(--space-4);
+}
+
+.yd-fieldset {
+  border: 0;
+  padding: 0;
+  margin: 0 0 var(--space-4);
+  padding-bottom: var(--space-4);
+  border-bottom: 1px solid var(--line);
+}
+.yd-fieldset:last-of-type {
+  border-bottom: 0;
+}
+
+.yd-fieldset legend {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.05rem;
+  color: var(--ink);
+  margin-bottom: var(--space-3);
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--gold);
+  width: 100%;
+}
+
+.yd-field {
+  margin-bottom: var(--space-3);
+}
+.yd-field:last-child { margin-bottom: 0; }
+
+.yd-field label {
+  display: block;
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 0.5rem;
+}
+.yd-field .req { color: var(--danchong); }
+.yd-field .optional {
+  font-weight: 400;
+  font-size: 0.84rem;
+  color: var(--stone);
+}
+
+.yd-example {
+  font-size: 0.85rem;
+  color: var(--stone);
+  background: var(--paper-deep);
+  padding: 0.6rem 0.9rem;
+  margin: 0 0 0.6rem;
+  line-height: 1.7;
+}
+
+.yd-field input[type="text"],
+.yd-field input[type="password"],
+.yd-field textarea,
+.yd-password-modal input {
+  width: 100%;
+  font-family: var(--font-body);
+  font-size: 0.96rem;
+  padding: 0.75rem 0.9rem;
+  border: 1px solid var(--line);
+  background: var(--paper);
+  color: var(--ink);
+  transition: border-color 0.2s ease;
+}
+.yd-field input:focus,
+.yd-field textarea:focus {
+  outline: none;
+  border-color: var(--gold);
+  background: var(--white);
+}
+.yd-field textarea {
+  resize: vertical;
+  line-height: 1.7;
+}
+
+.yd-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.8rem;
+  margin-top: var(--space-3);
+}
+
+.btn-ghost-light {
+  background: transparent;
+  border: 1px solid var(--line);
+  color: var(--stone);
+}
+.btn-ghost-light:hover {
+  border-color: var(--ink);
+  color: var(--ink);
+}
+
+.yd-error {
+  color: var(--danchong);
+  font-size: 0.9rem;
+  background: #8C2F1E12;
+  padding: 0.6rem 0.9rem;
+  margin: var(--space-2) 0 0;
+}
+
+/* ---- 목록 (기존 news-list 재사용 + 보조 정보) ---- */
+.yd-list-meta {
+  font-size: 0.84rem;
+  color: var(--stone);
+}
+.yd-list-empty {
+  color: var(--stone);
+  padding: var(--space-4) 0;
+  text-align: center;
+}
+
+/* ---- 상세보기 ---- */
+.yd-detail-card {
+  background: var(--white);
+  border: 1px solid var(--line);
+}
+.yd-detail-header {
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--line);
+  background: var(--paper-deep);
+}
+.yd-detail-header h3 {
+  font-size: 1.2rem;
+  margin-bottom: 0.4rem;
+}
+.yd-detail-header .meta {
+  font-size: 0.84rem;
+  color: var(--stone);
+}
+.yd-detail-body {
+  padding: var(--space-4);
+}
+.yd-detail-row {
+  margin-bottom: var(--space-3);
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid var(--line);
+}
+.yd-detail-row:last-child {
+  border-bottom: 0;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+.yd-detail-row .label {
+  font-size: 0.82rem;
+  color: var(--gold);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  margin-bottom: 0.4rem;
+}
+.yd-detail-row .value {
+  font-size: 0.98rem;
+  white-space: pre-line;
+  line-height: 1.8;
+}
+
+/* ---- 비밀번호 확인 모달 ---- */
+.yd-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(20,18,16,0.55);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-3);
+}
+.yd-modal[hidden] {
+  display: none;
+}
+.yd-modal-box {
+  width: 100%;
+  max-width: 360px;
+  background: var(--white);
+  border: 1px solid var(--line);
+  padding: var(--space-4);
+}
+.yd-modal-box h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.6rem;
+}
+.yd-modal-box input {
+  margin-top: 0.6rem;
+}
+
+/* ---- 반응형 ---- */
+@media (max-width: 600px) {
+  .yd-form-wrap { padding: var(--space-3); }
+  .yd-form-actions { flex-direction: column-reverse; }
+  .yd-form-actions .btn { width: 100%; justify-content: center; }
+}

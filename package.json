@@ -1,0 +1,8 @@
+{
+  "name": "seongju-daejae-website",
+  "version": "1.0.0",
+  "description": "성주대재보존회 홈페이지 - Netlify Functions 의존성",
+  "dependencies": {
+    "@netlify/blobs": "^8.1.0"
+  }
+}

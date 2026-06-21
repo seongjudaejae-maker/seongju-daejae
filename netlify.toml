@@ -1,0 +1,42 @@
+[build]
+  publish = "."
+  functions = "netlify/functions"
+
+# 연등(초) 발원 게시판 API 경로를 짧은 주소로 사용하기 위한 별칭
+# 예: /api/yeondeung/list -> /.netlify/functions/yeondeung-list
+[[redirects]]
+  from = "/api/yeondeung/list"
+  to = "/.netlify/functions/yeondeung-list"
+  status = 200
+
+[[redirects]]
+  from = "/api/yeondeung/get"
+  to = "/.netlify/functions/yeondeung-get"
+  status = 200
+
+[[redirects]]
+  from = "/api/yeondeung/create"
+  to = "/.netlify/functions/yeondeung-create"
+  status = 200
+
+[[redirects]]
+  from = "/api/yeondeung/update"
+  to = "/.netlify/functions/yeondeung-update"
+  status = 200
+
+[[redirects]]
+  from = "/api/yeondeung/delete"
+  to = "/.netlify/functions/yeondeung-delete"
+  status = 200
+
+[[redirects]]
+  from = "/api/yeondeung/admin-list"
+  to = "/.netlify/functions/yeondeung-admin-list"
+  status = 200
+
+# 존재하지 않는 경로 접근 시 404 페이지로 연결 (선택 사항)
+# 주의: 위의 API 리다이렉트보다 반드시 아래쪽에 위치해야 합니다.
+[[redirects]]
+  from = "/*"
+  to = "/404.html"
+  status = 404

@@ -1,0 +1,906 @@
+/* ==========================================================================
+   성주대재보존회 - Design Tokens & Base Styles
+   ========================================================================== */
+
+:root {
+  /* Color */
+  --ink: #1C1A18;          /* 묵색 - 메인 텍스트, 헤더 */
+  --paper: #F5F1E8;        /* 한지색 - 배경 */
+  --paper-deep: #ECE6D8;   /* 한지색 진한 톤 - 섹션 구분 배경 */
+  --danchong: #8C2F1E;     /* 단청 적색 - 포인트 */
+  --danchong-dim: #8C2F1E1a; /* 단청 적색 투명 */
+  --gold: #A8915C;         /* 금동색 - 보조 포인트 */
+  --stone: #5C5650;        /* 회갈색 - 본문 보조 텍스트 */
+  --line: #D8D0BE;         /* 구분선 */
+  --white: #FFFFFF;
+
+  /* Type */
+  --font-display: "Noto Serif KR", serif;
+  --font-body: "Noto Sans KR", sans-serif;
+
+  /* Spacing scale */
+  --space-1: 0.5rem;
+  --space-2: 1rem;
+  --space-3: 1.5rem;
+  --space-4: 2.5rem;
+  --space-5: 4rem;
+  --space-6: 6rem;
+  --space-7: 9rem;
+
+  /* Layout */
+  --content-width: 1140px;
+  --content-narrow: 760px;
+}
+
+* { box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  * { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  color: var(--ink);
+  background: var(--paper);
+  line-height: 1.75;
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+}
+
+img { max-width: 100%; display: block; }
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  line-height: 1.4;
+  margin: 0;
+  letter-spacing: 0.01em;
+}
+
+p { margin: 0; }
+
+ul { margin: 0; padding: 0; list-style: none; }
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px; height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
+
+/* Focus visibility */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--danchong);
+  outline-offset: 3px;
+}
+
+/* ==========================================================================
+   Layout helpers
+   ========================================================================== */
+
+.wrap {
+  max-width: var(--content-width);
+  margin: 0 auto;
+  padding: 0 var(--space-4);
+}
+
+.wrap-narrow {
+  max-width: var(--content-narrow);
+  margin: 0 auto;
+  padding: 0 var(--space-4);
+}
+
+.section {
+  padding: var(--space-6) 0;
+}
+
+.section-deep {
+  background: var(--paper-deep);
+}
+
+/* Signature divider — stylized eave/dancheong motif line */
+.motif-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: var(--space-4) 0;
+  height: 28px;
+}
+.motif-divider svg {
+  width: 120px;
+  height: 24px;
+  color: var(--gold);
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6em;
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  letter-spacing: 0.22em;
+  color: var(--danchong);
+  font-weight: 700;
+  margin-bottom: var(--space-2);
+  text-transform: uppercase;
+}
+.eyebrow::before {
+  content: "";
+  display: inline-block;
+  width: 18px;
+  height: 1px;
+  background: var(--danchong);
+}
+
+.section-title {
+  font-size: clamp(1.6rem, 2.6vw, 2.2rem);
+  margin-bottom: var(--space-3);
+}
+
+.section-lead {
+  color: var(--stone);
+  font-size: 1.05rem;
+  max-width: 640px;
+}
+
+/* ==========================================================================
+   Header / Nav
+   ========================================================================== */
+
+.site-header {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 1000;
+  background: var(--paper);
+  border-bottom: 1px solid var(--line);
+  color: var(--ink);
+  transition: box-shadow 0.3s ease;
+}
+.site-header.is-scrolled {
+  box-shadow: 0 2px 16px rgba(28, 26, 24, 0.08);
+}
+
+.site-header .wrap {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 84px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  white-space: nowrap;
+  color: inherit;
+}
+.brand .brand-logo {
+  height: 44px;
+  width: auto;
+  display: block;
+  flex-shrink: 0;
+  /* 로고 이미지 배경(아이보리)이 투명 헤더일 때 살짝 떠 보이지 않도록 다듬어줌 */
+  filter: drop-shadow(0 1px 3px rgba(0,0,0,0.18));
+}
+
+.main-nav {
+  display: flex;
+  gap: var(--space-4);
+}
+.main-nav > li {
+  position: relative;
+}
+.main-nav > li > a {
+  font-size: 0.96rem;
+  font-weight: 500;
+  padding: 1.6rem 0;
+  display: block;
+  position: relative;
+  color: inherit;
+}
+.main-nav > li > a::after {
+  content: "";
+  position: absolute;
+  left: 0; bottom: 1.3rem;
+  width: 0%;
+  height: 2px;
+  background: var(--danchong);
+  transition: width 0.25s ease;
+}
+.main-nav > li > a:hover::after,
+.main-nav > li.is-active > a::after {
+  width: 100%;
+}
+
+.sub-nav {
+  position: absolute;
+  top: 100%;
+  left: -1rem;
+  min-width: 200px;
+  background: var(--white);
+  border: 1px solid var(--line);
+  box-shadow: 0 12px 30px rgba(28, 26, 24, 0.08);
+  padding: 0.5rem 0;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-6px);
+  transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease;
+}
+.main-nav > li:hover .sub-nav,
+.main-nav > li:focus-within .sub-nav {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+.sub-nav li a {
+  display: block;
+  padding: 0.65rem 1.2rem;
+  font-size: 0.9rem;
+  color: var(--ink);
+  white-space: nowrap;
+}
+.sub-nav li a:hover {
+  background: var(--paper);
+  color: var(--danchong);
+}
+
+.nav-toggle {
+  display: none;
+  width: 44px;
+  height: 44px;
+  position: relative;
+}
+.nav-toggle span {
+  position: absolute;
+  left: 10px; right: 10px;
+  height: 2px;
+  background: var(--ink);
+  transition: transform 0.25s ease, opacity 0.25s ease;
+}
+.nav-toggle span:nth-child(1) { top: 16px; }
+.nav-toggle span:nth-child(2) { top: 22px; }
+.nav-toggle span:nth-child(3) { top: 28px; }
+.nav-toggle.is-open span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+.nav-toggle.is-open span:nth-child(2) { opacity: 0; }
+.nav-toggle.is-open span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+
+/* ==========================================================================
+   Hero
+   ========================================================================== */
+
+.hero {
+  position: relative;
+  height: 100vh;
+  min-height: 560px;
+  display: flex;
+  align-items: flex-end;
+  color: var(--white);
+  overflow: hidden;
+}
+.hero-media {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+.hero-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 65%;
+}
+.hero-media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(28,26,24,0.18) 0%, rgba(28,26,24,0.12) 38%, rgba(28,26,24,0.74) 100%);
+}
+.hero-content {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  padding-bottom: var(--space-6);
+}
+.hero-kicker {
+  font-size: 0.85rem;
+  letter-spacing: 0.3em;
+  color: var(--gold);
+  margin-bottom: var(--space-2);
+  font-weight: 600;
+}
+.hero-title {
+  font-size: clamp(2.2rem, 5.5vw, 4.2rem);
+  line-height: 1.25;
+  color: var(--white);
+  text-shadow: 0 2px 24px rgba(0,0,0,0.25);
+}
+.hero-desc {
+  margin-top: var(--space-3);
+  max-width: 560px;
+  font-size: 1.05rem;
+  color: rgba(255,255,255,0.88);
+}
+.hero-scroll {
+  position: absolute;
+  bottom: var(--space-3);
+  right: var(--space-4);
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  color: rgba(255,255,255,0.75);
+}
+.hero-scroll .line {
+  width: 1px;
+  height: 36px;
+  background: rgba(255,255,255,0.5);
+  position: relative;
+  overflow: hidden;
+}
+.hero-scroll .line::after {
+  content: "";
+  position: absolute;
+  top: -100%;
+  left: 0; right: 0;
+  height: 50%;
+  background: var(--white);
+  animation: scrollLine 1.8s ease-in-out infinite;
+}
+@keyframes scrollLine {
+  0% { top: -100%; }
+  60% { top: 100%; }
+  100% { top: 100%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-scroll .line::after { animation: none; top: 0; }
+}
+
+/* ==========================================================================
+   Cards / Grid
+   ========================================================================== */
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-4);
+  margin-top: var(--space-5);
+}
+
+.info-card {
+  background: var(--white);
+  border: 1px solid var(--line);
+  padding: var(--space-4);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.info-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 18px 32px rgba(28,26,24,0.07);
+}
+.info-card .num {
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  color: var(--gold);
+  letter-spacing: 0.1em;
+}
+.info-card h3 {
+  font-size: 1.2rem;
+  margin: var(--space-2) 0 var(--space-1);
+}
+.info-card p {
+  color: var(--stone);
+  font-size: 0.95rem;
+}
+
+/* ==========================================================================
+   Buttons
+   ========================================================================== */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.85rem 1.8rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border: 1px solid currentColor;
+  transition: background 0.25s ease, color 0.25s ease;
+}
+.btn-primary {
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
+}
+.btn-primary:hover {
+  background: var(--danchong);
+  border-color: var(--danchong);
+}
+.btn-ghost {
+  color: var(--white);
+  border-color: rgba(255,255,255,0.6);
+}
+.btn-ghost:hover {
+  background: rgba(255,255,255,0.12);
+}
+
+/* ==========================================================================
+   Footer
+   ========================================================================== */
+
+.site-footer {
+  background: var(--ink);
+  color: rgba(245,241,232,0.78);
+  padding: var(--space-6) 0 var(--space-3);
+}
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr;
+  gap: var(--space-5);
+  padding-bottom: var(--space-5);
+  border-bottom: 1px solid rgba(245,241,232,0.14);
+}
+.footer-brand {
+  font-family: var(--font-display);
+  color: var(--paper);
+  font-size: 1.2rem;
+  margin-bottom: var(--space-2);
+}
+.footer-desc {
+  font-size: 0.9rem;
+  line-height: 1.8;
+  max-width: 420px;
+  color: rgba(245,241,232,0.6);
+}
+.footer-col h4 {
+  color: var(--paper);
+  font-size: 0.95rem;
+  margin-bottom: var(--space-2);
+  font-weight: 600;
+}
+.footer-col li {
+  margin-bottom: 0.6rem;
+  font-size: 0.88rem;
+}
+.footer-col a:hover { color: var(--gold); }
+.footer-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: var(--space-3);
+  font-size: 0.8rem;
+  color: rgba(245,241,232,0.45);
+  flex-wrap: wrap;
+  gap: 0.8rem;
+}
+
+/* ==========================================================================
+   Page header (sub pages)
+   ========================================================================== */
+
+.page-header {
+  position: relative;
+  padding: 170px 0 var(--space-5);
+  background: var(--ink);
+  color: var(--white);
+  overflow: hidden;
+}
+.page-header::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle at 85% 20%, rgba(168,145,92,0.18), transparent 55%);
+}
+.page-header .wrap { position: relative; z-index: 1; }
+.breadcrumb {
+  font-size: 0.82rem;
+  color: rgba(255,255,255,0.55);
+  margin-bottom: var(--space-2);
+  letter-spacing: 0.04em;
+}
+.breadcrumb a:hover { color: var(--gold); }
+.page-title {
+  font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+  color: var(--white);
+}
+.page-tabs {
+  display: flex;
+  gap: var(--space-4);
+  margin-top: var(--space-4);
+  border-top: 1px solid rgba(255,255,255,0.14);
+  padding-top: var(--space-3);
+  flex-wrap: wrap;
+}
+.page-tabs a {
+  font-size: 0.92rem;
+  color: rgba(255,255,255,0.6);
+  padding-bottom: 0.4rem;
+  border-bottom: 2px solid transparent;
+}
+.page-tabs a:hover,
+.page-tabs a.is-active {
+  color: var(--white);
+  border-color: var(--gold);
+}
+
+/* ==========================================================================
+   Content (prose) page styles
+   ========================================================================== */
+
+.content-section {
+  padding: var(--space-6) 0;
+}
+.prose h2 {
+  font-size: 1.5rem;
+  margin: var(--space-5) 0 var(--space-2);
+  padding-top: var(--space-2);
+}
+.prose h2:first-child { margin-top: 0; }
+.prose p {
+  margin-bottom: var(--space-3);
+  color: var(--ink);
+  font-size: 1rem;
+  line-height: 1.9;
+}
+.prose p.lead {
+  font-size: 1.1rem;
+  color: var(--stone);
+}
+
+.figure-cite {
+  display: flex;
+  gap: var(--space-4);
+  align-items: flex-start;
+  margin: var(--space-5) 0;
+  padding: var(--space-4);
+  background: var(--white);
+  border-left: 3px solid var(--danchong);
+}
+.figure-cite img {
+  width: 220px;
+  flex-shrink: 0;
+}
+.figure-cite .cap {
+  font-size: 0.95rem;
+  color: var(--stone);
+}
+
+.quote-block {
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  padding: var(--space-5) 0;
+  margin: var(--space-5) 0;
+}
+.quote-block p {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  line-height: 2.1;
+  color: var(--ink);
+  white-space: pre-line;
+}
+
+/* Profile block (총무원장 소개) */
+.profile-block {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: var(--space-5);
+  align-items: start;
+}
+.profile-photo {
+  aspect-ratio: 3/4;
+  background: var(--paper-deep);
+  border: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--stone);
+  font-size: 0.85rem;
+}
+.profile-list li {
+  display: flex;
+  gap: var(--space-3);
+  padding: 0.9rem 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 0.95rem;
+}
+.profile-list li:first-child { padding-top: 0; }
+.profile-list .yr {
+  color: var(--gold);
+  font-weight: 600;
+  flex-shrink: 0;
+  width: 70px;
+}
+
+/* Org chart */
+.org-chart {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  margin: var(--space-5) 0;
+}
+.org-row {
+  display: flex;
+  gap: var(--space-3);
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.org-node {
+  background: var(--white);
+  border: 1px solid var(--line);
+  padding: 0.9rem 1.6rem;
+  font-size: 0.92rem;
+  text-align: center;
+  font-weight: 600;
+}
+.org-node.is-root {
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
+}
+.org-connector {
+  width: 1px;
+  height: 24px;
+  background: var(--line);
+}
+
+/* ==========================================================================
+   Video board (성주대재보존회 행사)
+   ========================================================================== */
+
+.video-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-4);
+  margin-top: var(--space-5);
+}
+.video-card {
+  background: var(--white);
+  border: 1px solid var(--line);
+  cursor: pointer;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.video-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 18px 32px rgba(28,26,24,0.08);
+}
+.video-thumb {
+  position: relative;
+  aspect-ratio: 16/9;
+  background: var(--ink);
+  overflow: hidden;
+}
+.video-thumb img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+}
+.video-thumb .play {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.video-thumb .play svg {
+  width: 52px; height: 52px;
+  color: var(--white);
+  filter: drop-shadow(0 2px 10px rgba(0,0,0,0.4));
+  transition: transform 0.2s ease;
+}
+.video-card:hover .play svg { transform: scale(1.1); }
+.video-body {
+  padding: var(--space-3);
+}
+.video-body .v-date {
+  font-size: 0.78rem;
+  color: var(--gold);
+  letter-spacing: 0.05em;
+  font-weight: 600;
+}
+.video-body h3 {
+  font-size: 1.02rem;
+  margin-top: 0.4rem;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.video-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(20,18,16,0.92);
+  z-index: 2000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4);
+}
+.video-modal.is-open { display: flex; }
+.video-modal-inner {
+  width: 100%;
+  max-width: 920px;
+  aspect-ratio: 16/9;
+  background: #000;
+  position: relative;
+}
+.video-modal-inner iframe {
+  width: 100%; height: 100%;
+  border: 0;
+}
+.video-modal-close {
+  position: absolute;
+  top: -44px; right: 0;
+  color: var(--white);
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+/* ==========================================================================
+   Map section (신고달사)
+   ========================================================================== */
+
+.map-frame {
+  width: 100%;
+  height: 420px;
+  border: 1px solid var(--line);
+  filter: grayscale(0.15) contrast(1.02);
+}
+.map-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-top: var(--space-3);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--line);
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+.map-info .addr-label {
+  font-size: 0.8rem;
+  color: var(--gold);
+  letter-spacing: 0.1em;
+  font-weight: 700;
+}
+.map-info .addr {
+  font-size: 1.05rem;
+  margin-top: 0.3rem;
+}
+
+/* Temple gallery strip */
+.gallery-strip {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr;
+  grid-template-rows: repeat(2, 220px);
+  gap: var(--space-2);
+  margin-top: var(--space-5);
+}
+.gallery-strip .g-item {
+  overflow: hidden;
+  background: var(--paper-deep);
+}
+.gallery-strip .g-item img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+.gallery-strip .g-item:hover img { transform: scale(1.06); }
+.gallery-strip .g-item:first-child {
+  grid-row: span 2;
+}
+
+/* ==========================================================================
+   News list (큰스님말씀 등)
+   ========================================================================== */
+
+.news-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: var(--space-3) 0;
+  border-bottom: 1px solid var(--line);
+  gap: var(--space-3);
+}
+.news-list li:first-child { border-top: 1px solid var(--line); }
+.news-list a {
+  font-size: 1rem;
+  flex: 1;
+}
+.news-list a:hover { color: var(--danchong); }
+.news-list .n-date {
+  font-size: 0.85rem;
+  color: var(--stone);
+  flex-shrink: 0;
+}
+
+/* ==========================================================================
+   Responsive
+   ========================================================================== */
+
+@media (max-width: 980px) {
+  .card-grid { grid-template-columns: repeat(2, 1fr); }
+  .video-grid { grid-template-columns: repeat(2, 1fr); }
+  .footer-grid { grid-template-columns: 1fr 1fr; gap: var(--space-4); }
+  .footer-brand-block { grid-column: 1 / -1; }
+  .gallery-strip { grid-template-columns: 1fr 1fr; grid-template-rows: repeat(3, 180px); }
+  .gallery-strip .g-item:first-child { grid-row: span 1; grid-column: span 2; }
+}
+
+@media (max-width: 760px) {
+  .wrap, .wrap-narrow { padding: 0 var(--space-3); }
+
+  .main-nav { display: none; }
+  .nav-toggle { display: block; }
+
+  .main-nav.is-mobile-open {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0; right: 0;
+    width: min(82vw, 320px);
+    height: 100vh;
+    background: var(--paper);
+    padding: 100px var(--space-3) var(--space-3);
+    box-shadow: -10px 0 30px rgba(0,0,0,0.12);
+    gap: 0;
+    overflow-y: auto;
+  }
+  .main-nav.is-mobile-open > li { width: 100%; border-bottom: 1px solid var(--line); }
+  .main-nav.is-mobile-open > li > a {
+    padding: 1rem 0;
+    color: var(--ink);
+    text-shadow: none;
+  }
+  .main-nav.is-mobile-open > li > a::after { display: none; }
+  .sub-nav {
+    position: static;
+    opacity: 1; visibility: visible; transform: none;
+    display: none;
+    border: 0;
+    box-shadow: none;
+    padding: 0 0 0.5rem 1rem;
+  }
+  .main-nav.is-mobile-open li.is-expanded .sub-nav { display: block; }
+
+  .hero-title { font-size: clamp(1.8rem, 8vw, 2.6rem); }
+  .hero-scroll { display: none; }
+
+  .card-grid { grid-template-columns: 1fr; }
+  .video-grid { grid-template-columns: 1fr; }
+
+  .footer-grid { grid-template-columns: 1fr; gap: var(--space-4); }
+
+  .profile-block { grid-template-columns: 1fr; }
+  .profile-photo { max-width: 220px; }
+
+  .gallery-strip { grid-template-columns: 1fr 1fr; grid-template-rows: repeat(3, 140px); }
+
+  .figure-cite { flex-direction: column; }
+  .figure-cite img { width: 100%; }
+
+  .map-info { flex-direction: column; }
+
+  .page-header { padding: 130px 0 var(--space-4); }
+  .page-tabs { gap: var(--space-3); overflow-x: auto; }
+}

@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>연등(초) 발원 관리 - 성주대재보존회</title>
+<meta name="robots" content="noindex">
+<style>
+  :root {
+    --ink: #1C1A18;
+    --paper: #F5F1E8;
+    --paper-deep: #ECE6D8;
+    --danchong: #8C2F1E;
+    --gold: #A8915C;
+    --stone: #5C5650;
+    --line: #D8D0BE;
+    --white: #FFFFFF;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, "Noto Sans KR", sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    line-height: 1.7;
+  }
+  .wrap { max-width: 960px; margin: 0 auto; padding: 2.5rem 1.5rem; }
+  h1 { font-size: 1.4rem; margin: 0 0 0.4rem; }
+  .sub { color: var(--stone); font-size: 0.92rem; margin-bottom: 1.8rem; }
+
+  .auth-box {
+    background: var(--white);
+    border: 1px solid var(--line);
+    padding: 1.6rem;
+    max-width: 420px;
+  }
+  .auth-box label { display:block; font-size:0.9rem; font-weight:600; margin-bottom:0.5rem; }
+  .auth-box input {
+    width: 100%;
+    padding: 0.7rem 0.9rem;
+    border: 1px solid var(--line);
+    font-size: 0.95rem;
+    margin-bottom: 0.8rem;
+  }
+  button {
+    font-family: inherit;
+    cursor: pointer;
+    border: none;
+    padding: 0.7rem 1.4rem;
+    background: var(--ink);
+    color: var(--paper);
+    font-size: 0.92rem;
+    font-weight: 600;
+  }
+  button:hover { background: var(--danchong); }
+  button.danger { background: transparent; border: 1px solid var(--danchong); color: var(--danchong); }
+  button.danger:hover { background: var(--danchong); color: var(--white); }
+  button.ghost { background: transparent; border: 1px solid var(--line); color: var(--stone); }
+
+  .error { color: var(--danchong); font-size: 0.88rem; margin-top: 0.5rem; }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--white);
+    border: 1px solid var(--line);
+    margin-top: 1rem;
+    font-size: 0.92rem;
+  }
+  th, td {
+    padding: 0.8rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid var(--line);
+    vertical-align: top;
+  }
+  th { background: var(--ink); color: var(--paper); font-weight: 600; }
+  tr:last-child td { border-bottom: 0; }
+  td.wish { max-width: 260px; white-space: pre-line; }
+  .empty { padding: 2rem; text-align: center; color: var(--stone); }
+  .toolbar { display:flex; justify-content: space-between; align-items:center; margin-top: 2rem; }
+  .badge { font-size: 0.78rem; background: var(--paper-deep); padding: 0.2rem 0.6rem; color: var(--stone); }
+
+  #detail-modal {
+    position: fixed; inset:0; background: rgba(20,18,16,0.55);
+    display:none; align-items:center; justify-content:center; padding:1.5rem; z-index: 100;
+  }
+  #detail-modal.open { display:flex; }
+  .modal-box {
+    background: var(--white); border:1px solid var(--line);
+    max-width: 480px; width:100%; padding:1.6rem; max-height: 80vh; overflow-y:auto;
+  }
+  .modal-box h3 { margin:0 0 1rem; }
+  .modal-row { margin-bottom: 0.9rem; padding-bottom:0.9rem; border-bottom:1px solid var(--line); }
+  .modal-row:last-child { border-bottom:0; }
+  .modal-row .l { font-size:0.78rem; color:var(--gold); font-weight:700; margin-bottom:0.3rem; }
+  .modal-row .v { white-space: pre-line; font-size:0.92rem; }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <a href="/admin/" style="font-size:0.85rem; color:var(--stone);">&larr; CMS 메인으로</a>
+  <h1>연등(초) 발원 관리</h1>
+  <p class="sub">방문자가 작성한 연등(초) 발원 신청 글을 조회하고 삭제할 수 있습니다. 관리자 비밀번호(마스터키)가 필요합니다.</p>
+
+  <div id="auth-section" class="auth-box">
+    <label for="admin-key-input">관리자 비밀번호</label>
+    <input type="password" id="admin-key-input" placeholder="마스터키 입력">
+    <button id="auth-btn">접속</button>
+    <p id="auth-error" class="error" style="display:none;"></p>
+  </div>
+
+  <div id="list-section" style="display:none;">
+    <div class="toolbar">
+      <span class="badge" id="count-badge">0건</span>
+      <button class="ghost" id="refresh-btn">새로고침</button>
+    </div>
+    <div id="table-wrap"></div>
+  </div>
+</div>
+
+<div id="detail-modal">
+  <div class="modal-box">
+    <h3>발원 상세</h3>
+    <div id="modal-content"></div>
+    <div style="display:flex; justify-content:flex-end; gap:0.6rem; margin-top:1rem;">
+      <button class="ghost" id="modal-close">닫기</button>
+      <button class="danger" id="modal-delete">이 글 삭제</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  let adminKey = "";
+  let currentItems = [];
+  let detailTargetId = null;
+
+  const authInput = document.getElementById("admin-key-input");
+  const authBtn = document.getElementById("auth-btn");
+  const authError = document.getElementById("auth-error");
+  const authSection = document.getElementById("auth-section");
+  const listSection = document.getElementById("list-section");
+  const tableWrap = document.getElementById("table-wrap");
+  const countBadge = document.getElementById("count-badge");
+  const refreshBtn = document.getElementById("refresh-btn");
+
+  const modal = document.getElementById("detail-modal");
+  const modalContent = document.getElementById("modal-content");
+  const modalClose = document.getElementById("modal-close");
+  const modalDelete = document.getElementById("modal-delete");
+
+  authBtn.addEventListener("click", tryAuth);
+  authInput.addEventListener("keydown", (e) => { if (e.key === "Enter") tryAuth(); });
+  refreshBtn.addEventListener("click", loadList);
+  modalClose.addEventListener("click", closeModal);
+  modalDelete.addEventListener("click", deleteCurrent);
+
+  async function tryAuth() {
+    adminKey = authInput.value;
+    if (!adminKey) return;
+    authError.style.display = "none";
+    authBtn.disabled = true;
+    authBtn.textContent = "확인 중…";
+    try {
+      const res = await fetch(`/api/yeondeung/admin-list?adminKey=${encodeURIComponent(adminKey)}`);
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "인증에 실패했습니다.");
+      currentItems = data.items || [];
+      authSection.style.display = "none";
+      listSection.style.display = "block";
+      renderTable();
+    } catch (err) {
+      authError.textContent = err.message;
+      authError.style.display = "block";
+    } finally {
+      authBtn.disabled = false;
+      authBtn.textContent = "접속";
+    }
+  }
+
+  async function loadList() {
+    try {
+      const res = await fetch(`/api/yeondeung/admin-list?adminKey=${encodeURIComponent(adminKey)}`);
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "목록을 불러오지 못했습니다.");
+      currentItems = data.items || [];
+      renderTable();
+    } catch (err) {
+      alert(err.message);
+    }
+  }
+
+  function renderTable() {
+    countBadge.textContent = `${currentItems.length}건`;
+    if (currentItems.length === 0) {
+      tableWrap.innerHTML = '<div class="empty">등록된 발원 글이 없습니다.</div>';
+      return;
+    }
+
+    const rows = currentItems.map((item) => `
+      <tr>
+        <td>${esc(item.applicantName)}</td>
+        <td>${esc(item.lampType)}</td>
+        <td>${esc(item.contact)}</td>
+        <td>${formatDate(item.createdAt)}</td>
+        <td><button class="ghost" data-id="${esc(item.id)}" data-action="view">보기</button></td>
+      </tr>
+    `).join("");
+
+    tableWrap.innerHTML = `
+      <table>
+        <thead>
+          <tr><th>신청자</th><th>종류</th><th>연락처</th><th>신청일</th><th></th></tr>
+        </thead>
+        <tbody>${rows}</tbody>
+      </table>
+    `;
+
+    tableWrap.querySelectorAll('[data-action="view"]').forEach((btn) => {
+      btn.addEventListener("click", () => openDetail(btn.dataset.id));
+    });
+  }
+
+  function openDetail(id) {
+    const item = currentItems.find((i) => i.id === id);
+    if (!item) return;
+    detailTargetId = id;
+
+    modalContent.innerHTML = `
+      <div class="modal-row"><div class="l">신청자 성명</div><div class="v">${esc(item.applicantName)}</div></div>
+      <div class="modal-row"><div class="l">연락처</div><div class="v">${esc(item.contact)}</div></div>
+      ${item.payerName ? `<div class="modal-row"><div class="l">입금자명</div><div class="v">${esc(item.payerName)}</div></div>` : ""}
+      <div class="modal-row"><div class="l">등/초 종류</div><div class="v">${esc(item.lampType)}</div></div>
+      <div class="modal-row"><div class="l">거주 주소</div><div class="v">${esc(item.address)}</div></div>
+      <div class="modal-row"><div class="l">동참자 명단</div><div class="v">${esc(item.participants)}</div></div>
+      <div class="modal-row"><div class="l">발원 내용</div><div class="v">${esc(item.wish)}</div></div>
+      <div class="modal-row"><div class="l">신청일</div><div class="v">${formatDate(item.createdAt)}</div></div>
+    `;
+    modal.classList.add("open");
+  }
+
+  function closeModal() {
+    modal.classList.remove("open");
+    detailTargetId = null;
+  }
+
+  async function deleteCurrent() {
+    if (!detailTargetId) return;
+    if (!confirm("이 발원 글을 삭제하시겠습니까? 삭제 후에는 복구할 수 없습니다.")) return;
+
+    try {
+      const res = await fetch("/api/yeondeung/delete", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: detailTargetId, adminKey }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "삭제하지 못했습니다.");
+
+      closeModal();
+      loadList();
+    } catch (err) {
+      alert(err.message);
+    }
+  }
+
+  function esc(str) {
+    if (str === undefined || str === null) return "";
+    const div = document.createElement("div");
+    div.textContent = String(str);
+    return div.innerHTML;
+  }
+  function formatDate(iso) {
+    if (!iso) return "";
+    const d = new Date(iso);
+    if (isNaN(d.getTime())) return "";
+    const yyyy = d.getFullYear();
+    const mm = String(d.getMonth() + 1).padStart(2, "0");
+    const dd = String(d.getDate()).padStart(2, "0");
+    return `${yyyy}.${mm}.${dd}`;
+  }
+})();
+</script>
+</body>
+</html>
