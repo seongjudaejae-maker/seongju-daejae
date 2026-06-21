@@ -37,14 +37,13 @@ export function generateId() {
 }
 
 /**
- * JSON 응답 헬퍼
+ * JSON 응답 헬퍼 (Netlify Functions v2는 표준 Response 객체를 요구합니다)
  */
 export function jsonResponse(statusCode, bodyObj) {
-  return {
-    statusCode,
+  return new Response(JSON.stringify(bodyObj), {
+    status: statusCode,
     headers: { "Content-Type": "application/json; charset=utf-8" },
-    body: JSON.stringify(bodyObj),
-  };
+  });
 }
 
 /**
