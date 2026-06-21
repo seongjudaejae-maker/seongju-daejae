@@ -2,7 +2,7 @@
 // 연등(초) 발원 게시판 - 글 삭제 (작성자 비밀번호 또는 관리자 마스터키 필요)
 
 import { getStore } from "@netlify/blobs";
-import { verifyPassword, isAdminRequest, jsonResponse } from "./_utils.mjs";
+import { verifyPassword, isAdminRequest, jsonResponse, removeFromIndex } from "./_utils.mjs";
 
 export default async (req) => {
   if (req.method !== "DELETE" && req.method !== "POST") {
@@ -36,6 +36,10 @@ export default async (req) => {
     }
 
     await store.delete(id);
+
+    const indexStore = getStore("yeondeung-balwon-index");
+    await removeFromIndex(indexStore, id);
+
     return jsonResponse(200, { success: true });
   } catch (err) {
     console.error("yeondeung-delete error:", err);

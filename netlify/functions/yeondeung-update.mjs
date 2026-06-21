@@ -2,7 +2,7 @@
 // 연등(초) 발원 게시판 - 글 수정 (작성자 비밀번호 또는 관리자 마스터키 필요)
 
 import { getStore } from "@netlify/blobs";
-import { verifyPassword, isAdminRequest, jsonResponse, escapeHtml } from "./_utils.mjs";
+import { verifyPassword, isAdminRequest, jsonResponse, escapeHtml, updateInIndex } from "./_utils.mjs";
 
 export default async (req) => {
   if (req.method !== "PUT") {
@@ -50,6 +50,10 @@ export default async (req) => {
     };
 
     await store.setJSON(id, updated);
+
+    const indexStore = getStore("yeondeung-balwon-index");
+    await updateInIndex(indexStore, updated);
+
     const { passwordHash, ...safeData } = updated;
     return jsonResponse(200, { item: safeData });
   } catch (err) {
