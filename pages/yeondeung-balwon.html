@@ -231,5 +231,19 @@
 
 <script src="../js/common.js"></script>
 <script src="../js/yeondeung.js"></script>
+
+<!-- Netlify Identity: 관리자 초대 수락/비밀번호 재설정 링크가 작동하도록 모든 페이지에 포함 -->
+<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+<script>
+  if (window.netlifyIdentity) {
+    window.netlifyIdentity.on("init", (user) => {
+      if (!user) {
+        window.netlifyIdentity.on("login", () => {
+          document.location.href = "/admin/";
+        });
+      }
+    });
+  }
+</script>
 </body>
 </html>
