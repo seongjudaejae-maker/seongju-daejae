@@ -34,6 +34,11 @@
   to = "/.netlify/functions/yeondeung-admin-list"
   status = 200
 
+[[redirects]]
+  from = "/api/yeondeung/rebuild-index"
+  to = "/.netlify/functions/yeondeung-rebuild-index"
+  status = 200
+
 # 존재하지 않는 경로 접근 시 404 페이지로 연결 (선택 사항)
 # 주의: 위의 API 리다이렉트보다 반드시 아래쪽에 위치해야 합니다.
 [[redirects]]

@@ -14,33 +14,7 @@ export default async (req) => {
 
   try {
     const indexStore = getStore("yeondeung-balwon-index");
-    let items = await getIndex(indexStore);
-
-    // 인덱스가 비어있는데 실제 글 저장소에는 글이 있다면,
-    // (예: 이 기능을 추가하기 전에 작성된 글이 있는 경우) 인덱스를 한 번만 복구합니다.
-    // 이후에는 항상 인덱스만 읽으므로 빨라집니다.
-    if (items.length === 0) {
-      const store = getStore("yeondeung-balwon");
-      const { blobs } = await store.list();
-
-      if (blobs.length > 0) {
-        const results = await Promise.all(
-          blobs.map((blobInfo) => store.get(blobInfo.key, { type: "json" }))
-        );
-        items = results
-          .filter(Boolean)
-          .map((raw) => ({
-            id: raw.id,
-            applicantName: raw.applicantName,
-            lampType: raw.lampType,
-            createdAt: raw.createdAt,
-            updatedAt: raw.updatedAt || null,
-          }));
-
-        // 복구된 인덱스를 저장해서, 다음 조회부터는 빠르게 동작하도록 함
-        await indexStore.setJSON("index", items);
-      }
-    }
+    const items = await getIndex(indexStore);
 
     // 최신 글이 위로 오도록 정렬 (인덱스는 보통 이미 최신순이지만 안전하게 한 번 더 정렬)
     items.sort((a, b) => (b.createdAt || "").localeCompare(a.createdAt || ""));
