@@ -20,13 +20,15 @@ export default async (req) => {
     const store = getStore("yeondeung-balwon");
     const { blobs } = await store.list();
 
-    const items = [];
-    for (const blobInfo of blobs) {
-      const raw = await store.get(blobInfo.key, { type: "json" });
-      if (!raw) continue;
-      const { passwordHash, ...safeData } = raw;
-      items.push(safeData);
-    }
+    // 순차(for await)로 하나씩 가져오면 글이 많아질수록 느려지므로,
+    // 모든 글을 동시에(Promise.all) 가져와 속도를 개선합니다.
+    const results = await Promise.all(
+      blobs.map((blobInfo) => store.get(blobInfo.key, { type: "json" }))
+    );
+
+    const items = results
+      .filter(Boolean)
+      .map(({ passwordHash, ...safeData }) => safeData);
 
     items.sort((a, b) => (b.createdAt || "").localeCompare(a.createdAt || ""));
 
