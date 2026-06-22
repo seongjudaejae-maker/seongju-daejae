@@ -71,10 +71,10 @@ export default async (req) => {
   };
 
   try {
-    const store = getStore("yeondeung-balwon");
+    const store = getStore({ name: "yeondeung-balwon", consistency: "strong" });
     await store.setJSON(id, record);
 
-    const indexStore = getStore("yeondeung-balwon-index");
+    const indexStore = getStore({ name: "yeondeung-balwon-index", consistency: "strong" });
     await addToIndex(indexStore, record);
 
     const { passwordHash, ...safeData } = record;

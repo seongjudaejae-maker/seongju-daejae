@@ -17,7 +17,7 @@ export default async (req) => {
   }
 
   try {
-    const store = getStore("yeondeung-balwon");
+    const store = getStore({ name: "yeondeung-balwon", consistency: "strong" });
     const { blobs } = await store.list();
 
     // 순차(for await)로 하나씩 가져오면 글이 많아질수록 느려지므로,

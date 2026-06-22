@@ -22,7 +22,7 @@ export default async (req) => {
   }
 
   try {
-    const store = getStore("yeondeung-balwon");
+    const store = getStore({ name: "yeondeung-balwon", consistency: "strong" });
     const existing = await store.get(id, { type: "json" });
     if (!existing) {
       return jsonResponse(404, { error: "해당 글을 찾을 수 없습니다." });
@@ -37,7 +37,7 @@ export default async (req) => {
 
     await store.delete(id);
 
-    const indexStore = getStore("yeondeung-balwon-index");
+    const indexStore = getStore({ name: "yeondeung-balwon-index", consistency: "strong" });
     await removeFromIndex(indexStore, id);
 
     return jsonResponse(200, { success: true });

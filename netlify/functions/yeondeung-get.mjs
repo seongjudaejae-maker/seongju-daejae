@@ -26,7 +26,7 @@ export default async (req) => {
   }
 
   try {
-    const store = getStore("yeondeung-balwon");
+    const store = getStore({ name: "yeondeung-balwon", consistency: "strong" });
     const raw = await store.get(id, { type: "json" });
     if (!raw) {
       return jsonResponse(404, { error: "해당 글을 찾을 수 없습니다." });

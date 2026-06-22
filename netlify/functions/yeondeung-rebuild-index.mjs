@@ -24,7 +24,7 @@ export default async (req) => {
   }
 
   try {
-    const store = getStore("yeondeung-balwon");
+    const store = getStore({ name: "yeondeung-balwon", consistency: "strong" });
     const { blobs } = await store.list();
 
     const results = await Promise.all(
@@ -43,7 +43,7 @@ export default async (req) => {
 
     items.sort((a, b) => (b.createdAt || "").localeCompare(a.createdAt || ""));
 
-    const indexStore = getStore("yeondeung-balwon-index");
+    const indexStore = getStore({ name: "yeondeung-balwon-index", consistency: "strong" });
     await indexStore.setJSON("index", items);
 
     return jsonResponse(200, { success: true, count: items.length });

@@ -69,6 +69,32 @@
   // ---------------------------------------------------------------------
   // 화면 전환
   // ---------------------------------------------------------------------
+  function scrollToContentTop() {
+    var section = document.querySelector('.content-section');
+    if (section) {
+      var headerOffset = 100; // 고정 헤더에 가리지 않도록 여유를 둠
+      var top = section.getBoundingClientRect().top + window.scrollY - headerOffset;
+      window.scrollTo({ top: top, behavior: "smooth" });
+    } else {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  }
+
+  // 상세보기 카드 자체를 화면 상단 가까이로 스크롤합니다.
+  // (.content-section 기준으로 하면 위쪽 안내 문구 때문에 카드가 화면 중간에 보이므로,
+  //  실제 글 내용이 담긴 카드를 직접 기준으로 삼습니다)
+  function scrollToDetailTop() {
+    var card = document.querySelector('.yd-detail-card');
+    var target = card || document.querySelector('.content-section');
+    if (target) {
+      var headerOffset = 100;
+      var top = target.getBoundingClientRect().top + window.scrollY - headerOffset;
+      window.scrollTo({ top: top, behavior: "smooth" });
+    } else {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  }
+
   function showListView(options) {
     const opts = options || {};
     els.viewList.hidden = false;
@@ -76,6 +102,7 @@
     els.viewDetail.hidden = true;
     els.toolbar.style.display = "flex";
     history.replaceState(null, "", location.pathname);
+    scrollToContentTop();
 
     if (opts.skipReload) {
       renderList(localItems);
@@ -91,6 +118,7 @@
     els.toolbar.style.display = "none";
     els.writeError.hidden = true;
     els.writeForm.reset();
+    scrollToContentTop();
   }
 
   function showDetailView() {
@@ -98,23 +126,48 @@
     els.viewWrite.hidden = true;
     els.viewDetail.hidden = false;
     els.toolbar.style.display = "none";
+    // 스크롤은 상세 내용이 모두 채워진 뒤에 해야 위치가 정확합니다.
+    // (renderDetail 호출 직후 별도로 scrollToContentTop을 호출합니다)
   }
 
   // ---------------------------------------------------------------------
   // 목록 불러오기
   // ---------------------------------------------------------------------
+  const LOADING_DELAY_MS = 300; // 이 시간보다 빨리 끝나면 로딩 문구를 보여주지 않음
+  const LOADING_MIN_VISIBLE_MS = 250; // 로딩 문구가 한 번 보이면 최소 이 시간만큼은 유지 (깜빡임 방지)
+
   async function loadList() {
-    els.list.innerHTML = '<li style="color: var(--stone);">목록을 불러오는 중입니다…</li>';
+    let loadingShownAt = null;
+    const loadingTimer = window.setTimeout(() => {
+      loadingShownAt = Date.now();
+      els.list.innerHTML = '<li style="color: var(--stone);">목록을 불러오는 중입니다…</li>';
+    }, LOADING_DELAY_MS);
+
     try {
       const res = await fetch(API.list);
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "목록을 불러오지 못했습니다.");
 
+      await clearLoadingTimerGracefully(loadingTimer, () => loadingShownAt);
+
       localItems = data.items || [];
       renderList(localItems);
     } catch (err) {
+      await clearLoadingTimerGracefully(loadingTimer, () => loadingShownAt);
       els.list.innerHTML = `<li class="yd-list-empty">${escapeText(err.message)}</li>`;
     }
+  }
+
+  // 로딩 문구가 이미 화면에 떴다면, 최소 노출 시간을 보장한 뒤에 다음 단계로 넘어갑니다.
+  // (떴다가 너무 빨리 사라지는 깜빡임을 막기 위함입니다)
+  function clearLoadingTimerGracefully(timer, getShownAt) {
+    window.clearTimeout(timer);
+    const shownAt = getShownAt();
+    if (shownAt === null) return Promise.resolve();
+    const elapsed = Date.now() - shownAt;
+    const remaining = LOADING_MIN_VISIBLE_MS - elapsed;
+    if (remaining <= 0) return Promise.resolve();
+    return new Promise((resolve) => window.setTimeout(resolve, remaining));
   }
 
   function renderList(items) {
@@ -219,16 +272,24 @@
   async function openDetailWithPassword(id, password) {
     currentDetailId = id;
     showDetailView();
-    els.detailContent.innerHTML = '<p style="color:var(--stone);">불러오는 중입니다…</p>';
     history.replaceState(null, "", `#id=${encodeURIComponent(id)}`);
+
+    let loadingShownAt = null;
+    const loadingTimer = window.setTimeout(() => {
+      loadingShownAt = Date.now();
+      els.detailContent.innerHTML = '<p style="color:var(--stone);">불러오는 중입니다…</p>';
+    }, LOADING_DELAY_MS);
 
     try {
       const item = await fetchDetail(id, password);
+      await clearLoadingTimerGracefully(loadingTimer, () => loadingShownAt);
       renderDetail(item);
     } catch (err) {
+      await clearLoadingTimerGracefully(loadingTimer, () => loadingShownAt);
       els.detailContent.innerHTML = `<p class="yd-error">${escapeText(err.message)}</p>`;
       els.editBtn.style.display = "none";
       els.deleteBtn.style.display = "none";
+      scrollToContentTop();
     }
   }
 
@@ -275,6 +336,9 @@
         </div>
       </div>
     `;
+
+    // 내용이 모두 채워진 다음에 스크롤해야 위치가 어긋나지 않습니다.
+    scrollToDetailTop();
   }
 
   // ---------------------------------------------------------------------
@@ -433,7 +497,7 @@
         pwField.style.display = "";
 
         showListView({ skipReload: true });
-        openDetail(item.id);
+        openDetailWithPassword(item.id, password);
       } catch (err) {
         els.writeError.textContent = err.message;
         els.writeError.hidden = false;

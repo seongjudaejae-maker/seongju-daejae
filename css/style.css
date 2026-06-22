@@ -959,10 +959,6 @@ textarea:focus-visible {
     display: none;
   }
 
-  .hero {
-    height: 70vh;
-    min-height: 420px;
-  }
   .hero-title { font-size: clamp(1.8rem, 8vw, 2.6rem); }
   .hero-scroll { display: none; }
   .hero-dots { bottom: var(--space-3); }

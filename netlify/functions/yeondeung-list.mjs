@@ -13,7 +13,7 @@ export default async (req) => {
   }
 
   try {
-    const indexStore = getStore("yeondeung-balwon-index");
+    const indexStore = getStore({ name: "yeondeung-balwon-index", consistency: "strong" });
     const items = await getIndex(indexStore);
 
     // 최신 글이 위로 오도록 정렬 (인덱스는 보통 이미 최신순이지만 안전하게 한 번 더 정렬)
