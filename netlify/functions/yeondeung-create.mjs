@@ -2,7 +2,7 @@
 // 연등(초) 발원 게시판 - 새 글 작성 (비회원, 비밀번호 필수)
 
 import { getStore } from "@netlify/blobs";
-import { hashPassword, generateId, jsonResponse, escapeHtml, addToIndex } from "./_utils.mjs";
+import { hashPassword, generateId, jsonResponse, escapeHtml } from "./_utils.mjs";
 
 const MAX_LEN = {
   applicantName: 50,
@@ -73,10 +73,6 @@ export default async (req) => {
   try {
     const store = getStore("yeondeung-balwon");
     await store.setJSON(id, record);
-
-    const indexStore = getStore("yeondeung-balwon-index");
-    await addToIndex(indexStore, record);
-
     const { passwordHash, ...safeData } = record;
     return jsonResponse(201, { item: safeData });
   } catch (err) {

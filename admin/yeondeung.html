@@ -113,10 +113,7 @@
   <div id="list-section" style="display:none;">
     <div class="toolbar">
       <span class="badge" id="count-badge">0건</span>
-      <div>
-        <button class="ghost" id="rebuild-index-btn" title="목록이 느리거나 옛 글이 안 보일 때만 사용하세요">인덱스 재구성</button>
-        <button class="ghost" id="refresh-btn">새로고침</button>
-      </div>
+      <button class="ghost" id="refresh-btn">새로고침</button>
     </div>
     <div id="table-wrap"></div>
   </div>
@@ -147,7 +144,6 @@
   const tableWrap = document.getElementById("table-wrap");
   const countBadge = document.getElementById("count-badge");
   const refreshBtn = document.getElementById("refresh-btn");
-  const rebuildBtn = document.getElementById("rebuild-index-btn");
 
   const modal = document.getElementById("detail-modal");
   const modalContent = document.getElementById("modal-content");
@@ -157,7 +153,6 @@
   authBtn.addEventListener("click", tryAuth);
   authInput.addEventListener("keydown", (e) => { if (e.key === "Enter") tryAuth(); });
   refreshBtn.addEventListener("click", loadList);
-  rebuildBtn.addEventListener("click", rebuildIndex);
   modalClose.addEventListener("click", closeModal);
   modalDelete.addEventListener("click", deleteCurrent);
 
@@ -193,24 +188,6 @@
       renderTable();
     } catch (err) {
       alert(err.message);
-    }
-  }
-
-  async function rebuildIndex() {
-    if (!confirm("목록 인덱스를 다시 만듭니다. 목록이 느리거나 옛 글이 안 보일 때만 사용해 주세요. 계속하시겠습니까?")) return;
-    rebuildBtn.disabled = true;
-    rebuildBtn.textContent = "재구성 중…";
-    try {
-      const res = await fetch(`/api/yeondeung/rebuild-index?adminKey=${encodeURIComponent(adminKey)}`);
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "인덱스 재구성에 실패했습니다.");
-      alert(`인덱스를 다시 만들었습니다. (총 ${data.count}건)`);
-      loadList();
-    } catch (err) {
-      alert(err.message);
-    } finally {
-      rebuildBtn.disabled = false;
-      rebuildBtn.textContent = "인덱스 재구성";
     }
   }
 

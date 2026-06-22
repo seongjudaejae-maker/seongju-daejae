@@ -7,7 +7,7 @@
 (function () {
   const API = {
     list: "/api/yeondeung/list",
-    get: "/api/yeondeung/get",
+    get: (id) => `/api/yeondeung/get?id=${encodeURIComponent(id)}`,
     create: "/api/yeondeung/create",
     update: "/api/yeondeung/update",
     delete: "/api/yeondeung/delete",
@@ -55,12 +55,10 @@
       if (e.key === "Enter") confirmPassword();
     });
 
-    // URL 해시로 상세글 직접 진입 지원 (#id=xxxx) — 개인정보 보호를 위해 비밀번호 확인을 거칩니다.
+    // URL 해시로 상세글 직접 진입 지원 (#id=xxxx)
     const hashId = new URLSearchParams(location.hash.slice(1)).get("id");
     if (hashId) {
-      currentDetailId = hashId;
-      loadList(); // 목록은 미리 불러와 둡니다 (뒤로가기 등 대비)
-      requestPassword("view");
+      openDetail(hashId);
     } else {
       loadList();
     }
@@ -131,9 +129,7 @@
       a.textContent = `[${item.lampType}] ${item.applicantName} 님의 발원`;
       a.addEventListener("click", (e) => {
         e.preventDefault();
-        // 개인정보가 포함되어 있어, 클릭 시 바로 보여주지 않고 비밀번호 확인을 먼저 요청합니다.
-        currentDetailId = item.id;
-        requestPassword("view");
+        openDetail(item.id);
       });
 
       const dateSpan = document.createElement("span");
@@ -190,8 +186,7 @@
       ];
 
       showListView({ skipReload: true });
-      // 방금 작성한 글은 본인이 직접 입력한 비밀번호를 그대로 사용해 상세보기를 보여줍니다.
-      openDetailWithPassword(data.item.id, payload.password);
+      openDetail(data.item.id);
     } catch (err) {
       els.writeError.textContent = err.message;
       els.writeError.hidden = false;
@@ -202,29 +197,20 @@
   }
 
   // ---------------------------------------------------------------------
-  // 상세보기 (비밀번호 또는 관리자 마스터키로만 열람 가능)
+  // 상세보기
   // ---------------------------------------------------------------------
-  async function fetchDetail(id, password) {
-    const res = await fetch(API.get, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id, password }),
-    });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || "글을 찾을 수 없습니다.");
-    return data.item;
-  }
-
-  // 글을 막 작성한 직후, 본인이 입력한 비밀번호로 곧바로 상세보기를 띄울 때 사용합니다.
-  async function openDetailWithPassword(id, password) {
+  async function openDetail(id) {
     currentDetailId = id;
     showDetailView();
     els.detailContent.innerHTML = '<p style="color:var(--stone);">불러오는 중입니다…</p>';
     history.replaceState(null, "", `#id=${encodeURIComponent(id)}`);
 
     try {
-      const item = await fetchDetail(id, password);
-      renderDetail(item);
+      const res = await fetch(API.get(id));
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "글을 찾을 수 없습니다.");
+
+      renderDetail(data.item);
     } catch (err) {
       els.detailContent.innerHTML = `<p class="yd-error">${escapeText(err.message)}</p>`;
       els.editBtn.style.display = "none";
@@ -284,12 +270,8 @@
     pendingAction = action;
     els.pwInput.value = "";
     els.pwError.hidden = true;
-    const titles = {
-      view: "비밀번호 확인 (열람)",
-      edit: "수정 확인",
-      delete: "삭제 확인",
-    };
-    document.getElementById("yd-password-modal-title").textContent = titles[action] || "비밀번호 확인";
+    document.getElementById("yd-password-modal-title").textContent =
+      action === "delete" ? "삭제 확인" : "수정 확인";
     els.pwModal.hidden = false;
     els.pwInput.focus();
   }
@@ -307,26 +289,10 @@
       return;
     }
 
-    if (pendingAction === "view") {
-      await performView(password);
-    } else if (pendingAction === "delete") {
+    if (pendingAction === "delete") {
       await performDelete(password);
     } else if (pendingAction === "edit") {
       await performEditCheck(password);
-    }
-  }
-
-  async function performView(password) {
-    try {
-      const item = await fetchDetail(currentDetailId, password);
-
-      closePasswordModal();
-      showDetailView();
-      history.replaceState(null, "", `#id=${encodeURIComponent(currentDetailId)}`);
-      renderDetail(item);
-    } catch (err) {
-      els.pwError.textContent = err.message;
-      els.pwError.hidden = false;
     }
   }
 
@@ -352,13 +318,16 @@
     }
   }
 
-  // 수정은: 비밀번호 검증을 위해 상세 조회를 시도해
+  // 수정은: 비밀번호 검증을 위해 더미 업데이트(현재 값 그대로 재전송)를 시도해
   // 통과하면 수정 폼을 채워서 보여주는 방식으로 단순화합니다.
   async function performEditCheck(password) {
     try {
-      const item = await fetchDetail(currentDetailId, password);
+      const res = await fetch(API.get(currentDetailId));
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "글을 불러올 수 없습니다.");
+
       closePasswordModal();
-      openEditForm(item, password);
+      openEditForm(data.item, password);
     } catch (err) {
       els.pwError.textContent = err.message;
       els.pwError.hidden = false;
