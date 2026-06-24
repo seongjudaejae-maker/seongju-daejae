@@ -900,6 +900,16 @@ textarea:focus-visible {
   color: var(--stone);
   flex-shrink: 0;
 }
+.news-list .pogyo-state-msg {
+  justify-content: flex-start;
+  color: var(--stone);
+  font-style: italic;
+}
+.pogyo-state-msg {
+  color: var(--stone);
+  font-style: italic;
+  padding: var(--space-3) 0;
+}
 
 /* ==========================================================================
    Responsive
