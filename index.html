@@ -9,6 +9,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&family=Noto+Serif+KR:wght@500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/wip-modal.css">
 </head>
 <body>
 
@@ -67,6 +68,8 @@
 <!-- ============ HERO ============ -->
 <section class="hero">
   <div class="hero-media">
+    <div class="hero-light-leak"></div>
+    <canvas class="hero-ambient-canvas" id="hero-ambient-canvas" aria-hidden="true"></canvas>
     <div class="hero-slide is-active">
       <img src="images/singodalsa-hero-1.jpg" alt="신고달사 전경 1" onerror="this.src='https://placehold.co/1920x1080/1c1a18/A8915C?text=%EC%8B%A0%EA%B3%A0%EB%8B%AC%EC%82%AC+1'">
     </div>
@@ -79,15 +82,34 @@
   </div>
   <div class="hero-content">
     <div class="wrap">
+      <div class="hero-symbols" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M2 18L7 8L11 15L15 6L22 18H2Z"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round"><path d="M4 12C4 10 6 8 8 8C9 8 10 9 11 10C12 8 14 7 16 7C19 7 21 9 21 12"/><path d="M3 15C3 15 5 13 8 13C11 13 13 16 16 16C19 16 21 14 21 14"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M12 4V20M8 8H16M6 12H18M4 16H20"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M12 5C8 5 6 8 6 12V17H18V12C18 8 16 5 12 5Z"/><path d="M10 20C10 21 11 22 12 22C13 22 14 21 14 20"/></svg>
+      </div>
       <p class="hero-kicker">SEONGJU GREAT RITE PRESERVATION SOCIETY</p>
-      <h1 class="hero-title">천년을 이어온 기도,<br>성주대재의 정신을 지킵니다</h1>
+      <h1 class="hero-title">신고달사</h1>
+      <div class="hero-sub">
+        <span>경기도 여주시 북내면</span>
+        <span class="div-dot"></span>
+        <span>태고종</span>
+        <span class="div-dot"></span>
+        <span>성주대재 봉행사찰</span>
+      </div>
       <p class="hero-desc">대한불교밀인종 성주대재보존회는 여주 신고달사를 봉행사찰로 삼아 성주대재의 전통과 의례를 보존하고 전승하는 데 힘쓰고 있습니다.</p>
-      <div style="margin-top: 2rem; display: flex; gap: 1rem; flex-wrap: wrap;">
+      <div class="hero-actions">
         <a href="pages/seongjudaejae-sogae.html" class="btn btn-primary">성주대재보존회 알아보기</a>
         <a href="pages/singodalsa.html" class="btn btn-ghost">봉행사찰 신고달사</a>
       </div>
     </div>
   </div>
+  <div class="hero-meta" aria-hidden="true">
+    <div><span>소재지.</span>경기도 여주시 북내면 상교리</div>
+    <div><span>창건.</span>1973년 (고달사 옛터)</div>
+    <div><span>종단.</span>대한불교태고종</div>
+  </div>
+  <div class="hero-vertical-text" aria-hidden="true">法 · 寂 · 願</div>
   <div class="hero-dots" role="tablist" aria-label="배경 사진 선택">
     <button type="button" class="hero-dot is-active" aria-label="첫 번째 사진"></button>
     <button type="button" class="hero-dot" aria-label="두 번째 사진"></button>
@@ -98,6 +120,10 @@
     <span class="line"></span>
   </div>
 </section>
+
+<!-- 히어로 이후 모든 콘텐츠를 감싸는 래퍼: 스크롤 시 고정된(sticky) 히어로 사진 위로
+     이 영역 전체가 슬라이드되어 덮이도록 하기 위함 -->
+<div class="page-body-overlay">
 
 <!-- ============ INTRO CARDS ============ -->
 <section class="section">
@@ -200,7 +226,12 @@
   </div>
 </footer>
 
+</div><!-- /.page-body-overlay -->
+
 <script src="js/common.js"></script>
+
+<!-- 준비중 안내 모달: 모든 .btn 버튼 클릭 시 표시 (css/wip-modal.css 와 함께 동작) -->
+<script src="js/wip-modal.js"></script>
 
 <!-- Netlify Identity: 관리자 초대 수락/비밀번호 재설정 링크가 작동하도록 모든 페이지에 포함 -->
 <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>

@@ -1,0 +1,36 @@
+/* ===== 준비중 안내 모달 (모든 페이지 공용) ===== */
+.wip-modal-overlay{
+  position:fixed; inset:0; z-index:9999;
+  background:rgba(20,18,16,0.55);
+  display:none; align-items:center; justify-content:center;
+  padding:20px;
+}
+.wip-modal-overlay.is-open{ display:flex; }
+.wip-modal{
+  background:#eef3fb;
+  border-radius:14px;
+  padding:26px 28px 20px;
+  max-width:360px; width:100%;
+  box-shadow:0 20px 50px rgba(0,0,0,0.28);
+  font-family:'Noto Sans KR', sans-serif;
+  animation:wip-pop .18s ease-out;
+}
+@keyframes wip-pop{
+  from{ opacity:0; transform:translateY(8px) scale(.98); }
+  to{ opacity:1; transform:translateY(0) scale(1); }
+}
+.wip-modal-body{
+  display:flex; align-items:flex-start; gap:10px;
+  margin-bottom:22px;
+}
+.wip-modal-icon{ font-size:1.15rem; line-height:1.6; flex:none; }
+.wip-modal-text{
+  color:#2f5fe0; font-weight:600; line-height:1.65; font-size:0.95rem;
+}
+.wip-modal-actions{ display:flex; justify-content:flex-end; }
+.wip-modal-confirm{
+  background:#2b2926; color:#fff; border:none; border-radius:6px;
+  padding:8px 22px; font-size:0.9rem; font-weight:500; cursor:pointer;
+  font-family:inherit;
+}
+.wip-modal-confirm:hover{ background:#000; }
