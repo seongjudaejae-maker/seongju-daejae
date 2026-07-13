@@ -328,6 +328,7 @@ document.addEventListener('DOMContentLoaded', function () {
   function isInternalPageLink(anchor) {
     var href = anchor.getAttribute('href');
     if (!href) return false;
+    if (anchor.classList.contains('brand')) return false;      // 좌측 상단 로고(홈으로 이동)는 정상 동작
     if (href.charAt(0) === '#') return false;                 // 같은 페이지 내 앵커
     if (href.indexOf('mailto:') === 0) return false;
     if (href.indexOf('tel:') === 0) return false;
@@ -344,4 +345,118 @@ document.addEventListener('DOMContentLoaded', function () {
     e.preventDefault();
     ensureSoonModal().classList.add('is-open');
   });
+})();
+
+// ==========================================================================
+// 스크롤 리빌 — 카드/이미지/문단이 뷰포트에 들어올 때 은은하게 떠오르는 연출
+// (prefers-reduced-motion은 상단 전역 규칙에서 transition-duration을 0에
+//  가깝게 만들어 자동으로 무력화되며, IntersectionObserver 미지원 브라우저나
+//  JS 비활성 환경에서는 아예 클래스를 붙이지 않아 콘텐츠가 항상 보이도록 함)
+// ==========================================================================
+(function () {
+  if (!('IntersectionObserver' in window)) return;
+
+  var targets = document.querySelectorAll(
+    '.info-card, .video-card, .gallery-strip .g-item, .section-title, .section-lead, .org-node, .profile-block, .quote-block'
+  );
+  if (!targets.length) return;
+
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-visible');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
+
+  targets.forEach(function (el) {
+    el.classList.add('reveal');
+    var siblingIndex = el.parentElement
+      ? Array.prototype.indexOf.call(el.parentElement.children, el)
+      : 0;
+    el.style.transitionDelay = (Math.min(siblingIndex, 4) * 0.08) + 's';
+    io.observe(el);
+  });
+})();
+
+// ==========================================================================
+// 메인 페이지 영상 — 화면(뷰포트)에 들어오면 자동 재생, 벗어나면 일시정지.
+//
+// 브라우저는 "소리가 나는 영상"의 자동재생을 정책적으로 차단한다. 따라서 자동재생은
+// 반드시 muted 상태로만 시작하고, 소리는 방문자가 버튼을 눌렀을 때(= 사용자 제스처)
+// 비로소 켜지도록 한다. 이것이 브라우저 정책 안에서 가능한 유일한 방식이다.
+// 한 번 소리를 켠 뒤에는 사용자의 선택을 존중해, 스크롤로 영상이 다시 들어와도
+// 음소거로 되돌리지 않는다.
+// ==========================================================================
+(function () {
+  var video = document.getElementById('feature-video');
+  var soundBtn = document.getElementById('film-sound-btn');
+  if (!video) return;
+
+  var userWantsSound = false;
+
+  function playVideo() {
+    var p = video.play();
+    if (p && typeof p.catch === 'function') {
+      p.catch(function () {
+        // 자동재생이 차단된 경우(예: 소리가 켜진 상태에서 화면 밖으로 나갔다 다시 들어옴)
+        // 음소거로 되돌려 한 번 더 시도한다. 그래도 안 되면 poster가 그대로 보인다.
+        video.muted = true;
+        syncSoundBtn();
+        var retry = video.play();
+        if (retry && typeof retry.catch === 'function') { retry.catch(function () {}); }
+      });
+    }
+  }
+
+  function syncSoundBtn() {
+    if (!soundBtn) return;
+    var on = !video.muted;
+    soundBtn.setAttribute('aria-pressed', on ? 'true' : 'false');
+    var label = soundBtn.querySelector('.film-sound-label');
+    if (label) label.textContent = on ? '소리 끄기' : '소리 켜기';
+  }
+
+  // 자동재생을 위해 항상 음소거 상태로 시작
+  video.muted = true;
+  syncSoundBtn();
+
+  // 소리 켜기/끄기 토글 (사용자 제스처이므로 이 시점에는 소리를 켤 수 있다)
+  if (soundBtn) {
+    soundBtn.addEventListener('click', function () {
+      video.muted = !video.muted;
+      userWantsSound = !video.muted;
+      if (!video.muted && video.paused) playVideo();
+      syncSoundBtn();
+    });
+  }
+
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          playVideo();
+        } else {
+          video.pause();
+          // 화면에서 벗어나면 소리가 계속 새어나오지 않도록 음소거로 되돌린다.
+          // (사용자가 소리를 켜 뒀다면 다시 들어올 때 그 선택을 복원)
+          video.muted = true;
+          syncSoundBtn();
+        }
+      });
+    }, { threshold: 0.45 });
+    io.observe(video);
+
+    // 화면에 다시 들어와 재생이 시작되면, 앞서 사용자가 켜 둔 소리 설정을 복원
+    video.addEventListener('play', function () {
+      if (userWantsSound && video.muted) {
+        video.muted = false;
+        syncSoundBtn();
+      }
+    });
+  } else {
+    // IntersectionObserver 미지원 브라우저: 그냥 음소거 재생
+    playVideo();
+  }
 })();
