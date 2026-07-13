@@ -2,6 +2,24 @@
   publish = "."
   functions = "netlify/functions"
 
+# ============================================================
+# 정식 주소(www) 통일
+# ------------------------------------------------------------
+# milinjong.or.kr 로 들어온 방문자를 www.milinjong.or.kr 로 넘긴다.
+# 두 주소가 같은 내용을 각각 보여주면 검색엔진이 서로 다른 사이트로
+# 착각해(중복 콘텐츠) 검색 순위가 분산되므로, 하나로 합쳐 주는 것이다.
+# 301은 "영구 이동"이라는 뜻으로, 검색엔진이 www 주소를 정식으로 인식한다.
+#
+# ※ 이 규칙이 동작하려면 Netlify 관리화면에서 두 도메인이 모두 등록되어 있고,
+#    www.milinjong.or.kr 이 Primary domain 으로 지정되어 있어야 한다.
+#    (Site settings → Domain management → Primary domain)
+# ============================================================
+[[redirects]]
+  from = "https://milinjong.or.kr/*"
+  to = "https://www.milinjong.or.kr/:splat"
+  status = 301
+  force = true
+
 # 연등(초) 발원 게시판 API 경로를 짧은 주소로 사용하기 위한 별칭
 # 예: /api/yeondeung/list -> /.netlify/functions/yeondeung-list
 [[redirects]]

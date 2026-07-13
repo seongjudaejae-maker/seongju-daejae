@@ -16,10 +16,18 @@ document.addEventListener('DOMContentLoaded', function () {
   onScroll();
   window.addEventListener('scroll', onScroll, { passive: true });
 
-  // Mobile nav toggle
+  // ==========================================================================
+  // 모바일 메뉴 드로어 (왼쪽에서 슬라이드)
+  // --------------------------------------------------------------------------
+  // 데스크톱용 .main-nav 마크업을 그대로 읽어서, 모바일 전용 2단 드로어를
+  // 자동으로 만들어 붙인다. (왼쪽 = 대메뉴 / 오른쪽 = 선택한 대메뉴의 소메뉴)
+  // 이렇게 하면 21개 페이지의 HTML을 건드리지 않고도 모든 페이지에 적용된다.
+  // ==========================================================================
   var toggle = document.querySelector('.nav-toggle');
   var nav = document.querySelector('.main-nav');
   var scrollLockY = 0;
+  var drawer = null;
+  var backdrop = null;
 
   function lockBodyScroll() {
     scrollLockY = window.scrollY;
@@ -45,41 +53,154 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  if (toggle && nav) {
-    toggle.addEventListener('click', function () {
-      var isOpen = nav.classList.toggle('is-mobile-open');
-      toggle.classList.toggle('is-open', isOpen);
-      toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-      if (isOpen) {
-        lockBodyScroll();
+  function buildDrawer() {
+    if (drawer || !nav) return;
+
+    backdrop = document.createElement('div');
+    backdrop.className = 'drawer-backdrop';
+
+    drawer = document.createElement('nav');
+    drawer.className = 'mobile-drawer';
+    drawer.setAttribute('aria-label', '모바일 메뉴');
+
+    // ---- 상단 인사말 ----
+    var head = document.createElement('div');
+    head.className = 'drawer-head';
+    head.innerHTML =
+      '<p class="drawer-greeting">대한불교밀인종</p>' +
+      '<p class="drawer-sub">밀인(密印)의 법풍을 오늘에 잇습니다.</p>' +
+      '<button type="button" class="drawer-close" aria-label="메뉴 닫기">' +
+        '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">' +
+          '<path d="M6 6L18 18M18 6L6 18"/>' +
+        '</svg>' +
+      '</button>';
+
+    var body = document.createElement('div');
+    body.className = 'drawer-body';
+
+    var mainCol = document.createElement('div');
+    mainCol.className = 'drawer-main';
+    var subCol = document.createElement('div');
+    subCol.className = 'drawer-sub-panel';
+
+    var topItems = nav.querySelectorAll(':scope > li');
+    var tabs = [];
+    var panels = [];
+
+    topItems.forEach(function (li, i) {
+      var topLink = li.querySelector(':scope > a');
+      if (!topLink) return;
+
+      // 왼쪽 대메뉴 버튼
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.textContent = topLink.textContent.trim();
+      mainCol.appendChild(btn);
+      tabs.push(btn);
+
+      // 오른쪽 소메뉴 패널
+      var ul = document.createElement('ul');
+      var subNav = li.querySelector('.sub-nav');
+      if (subNav) {
+        subNav.querySelectorAll('a').forEach(function (a) {
+          var item = document.createElement('li');
+          var link = document.createElement('a');
+          link.href = a.getAttribute('href');
+          link.textContent = a.textContent.trim();
+          item.appendChild(link);
+          ul.appendChild(item);
+        });
       } else {
-        unlockBodyScroll();
+        // 하위메뉴가 없는 항목(봉행사찰 신고달사, 온라인민원)은
+        // 자기 자신을 오른쪽에 하나만 보여준다.
+        var item2 = document.createElement('li');
+        var link2 = document.createElement('a');
+        link2.href = topLink.getAttribute('href');
+        link2.textContent = topLink.textContent.trim();
+        item2.appendChild(link2);
+        ul.appendChild(item2);
       }
+      subCol.appendChild(ul);
+      panels.push(ul);
+
+      btn.addEventListener('click', function () {
+        selectTab(i);
+      });
     });
 
-    // Expand submenus on mobile by tapping the parent link's caret area
-    nav.querySelectorAll('li').forEach(function (li) {
-      var subNav = li.querySelector('.sub-nav');
-      if (!subNav) return;
-      // 하위메뉴가 있는 항목에만 +/- 표시를 보여주기 위한 클래스
-      // ("성주대재 봉행사찰"처럼 하위메뉴가 없는 항목에는 붙지 않음)
-      li.classList.add('has-submenu');
-      var topLink = li.querySelector('a');
-      topLink.addEventListener('click', function (e) {
-        if (window.innerWidth <= 760) {
-          e.preventDefault();
-          li.classList.toggle('is-expanded');
-        }
-      });
+    function selectTab(index) {
+      tabs.forEach(function (t, i) { t.classList.toggle('is-active', i === index); });
+      panels.forEach(function (pnl, i) { pnl.classList.toggle('is-active', i === index); });
+      subCol.scrollTop = 0;
+    }
+
+    // 현재 보고 있는 페이지가 속한 대메뉴를 기본 선택 (없으면 첫 번째)
+    var activeIndex = 0;
+    topItems.forEach(function (li, i) {
+      if (li.classList.contains('is-active')) activeIndex = i;
+    });
+    selectTab(activeIndex);
+
+    body.appendChild(mainCol);
+    body.appendChild(subCol);
+    drawer.appendChild(head);
+    drawer.appendChild(body);
+    document.body.appendChild(backdrop);
+    document.body.appendChild(drawer);
+
+    backdrop.addEventListener('click', closeDrawer);
+    head.querySelector('.drawer-close').addEventListener('click', closeDrawer);
+
+    // 메뉴 항목을 누르면 드로어를 닫는다.
+    // (링크 자체는 "준비 중입니다" 팝업이 가로채므로, 팝업이 드로어에 가리지 않게 됨)
+    subCol.addEventListener('click', function (e) {
+      if (e.target.closest('a')) closeDrawer();
     });
   }
 
-  // Close mobile nav when resizing to desktop
-  window.addEventListener('resize', function () {
-    if (window.innerWidth > 760 && nav && nav.classList.contains('is-mobile-open')) {
-      nav.classList.remove('is-mobile-open');
+  function openDrawer() {
+    buildDrawer();
+    if (!drawer) return;
+    drawer.classList.add('is-open');
+    backdrop.classList.add('is-open');
+    if (toggle) {
+      toggle.classList.add('is-open');
+      toggle.setAttribute('aria-expanded', 'true');
+    }
+    lockBodyScroll();
+  }
+
+  function closeDrawer() {
+    if (!drawer) return;
+    drawer.classList.remove('is-open');
+    backdrop.classList.remove('is-open');
+    if (toggle) {
       toggle.classList.remove('is-open');
-      unlockBodyScroll();
+      toggle.setAttribute('aria-expanded', 'false');
+    }
+    unlockBodyScroll();
+  }
+
+  if (toggle && nav) {
+    toggle.addEventListener('click', function () {
+      if (drawer && drawer.classList.contains('is-open')) {
+        closeDrawer();
+      } else {
+        openDrawer();
+      }
+    });
+  }
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && drawer && drawer.classList.contains('is-open')) {
+      closeDrawer();
+    }
+  });
+
+  // 데스크톱 폭으로 넓어지면 드로어를 닫는다
+  window.addEventListener('resize', function () {
+    if (window.innerWidth > 760 && drawer && drawer.classList.contains('is-open')) {
+      closeDrawer();
     }
   });
 
@@ -375,7 +496,7 @@ document.addEventListener('DOMContentLoaded', function () {
     var siblingIndex = el.parentElement
       ? Array.prototype.indexOf.call(el.parentElement.children, el)
       : 0;
-    el.style.transitionDelay = (Math.min(siblingIndex, 4) * 0.08) + 's';
+    el.style.transitionDelay = (Math.min(siblingIndex, 4) * 0.14) + 's';
     io.observe(el);
   });
 })();

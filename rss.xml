@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>대한불교밀인종</title>
+    <link>https://www.milinjong.or.kr/</link>
+    <description>대한불교밀인종 공식 홈페이지. 밀인(密印)의 법풍을 이어 심인선(心印禪)을 닦는 종단입니다.</description>
+    <language>ko</language>
+    <lastBuildDate>Mon, 13 Jul 2026 13:45:13 +0000</lastBuildDate>
+    <item>
+      <title>종단소개</title>
+      <link>https://www.milinjong.or.kr/pages/jongdan-sogae.html</link>
+      <description>밀인(密印)의 뜻과 창종 연기설화, 종조 무진당 도현대종사, 일심삼밀과 심인선 사상을 소개합니다.</description>
+      <guid>https://www.milinjong.or.kr/pages/jongdan-sogae.html</guid>
+      <pubDate>Mon, 13 Jul 2026 13:45:13 +0000</pubDate>
+    </item>
+    <item>
+      <title>총무원장 인사말</title>
+      <link>https://www.milinjong.or.kr/pages/chongmuwon-insamal.html</link>
+      <description>대한불교밀인종 총무원장 인사말입니다.</description>
+      <guid>https://www.milinjong.or.kr/pages/chongmuwon-insamal.html</guid>
+      <pubDate>Mon, 13 Jul 2026 13:45:13 +0000</pubDate>
+    </item>
+    <item>
+      <title>큰스님 말씀</title>
+      <link>https://www.milinjong.or.kr/pages/keunsnim-malsseum.html</link>
+      <description>밝고 청정한 신심으로 — 큰스님 법문을 전합니다.</description>
+      <guid>https://www.milinjong.or.kr/pages/keunsnim-malsseum.html</guid>
+      <pubDate>Mon, 13 Jul 2026 13:45:13 +0000</pubDate>
+    </item>
+    <item>
+      <title>성주대재보존회 소개</title>
+      <link>https://www.milinjong.or.kr/pages/seongjudaejae-sogae.html</link>
+      <description>성주대재의 의의와 보존회의 활동을 소개합니다.</description>
+      <guid>https://www.milinjong.or.kr/pages/seongjudaejae-sogae.html</guid>
+      <pubDate>Mon, 13 Jul 2026 13:45:13 +0000</pubDate>
+    </item>
+    <item>
+      <title>봉행사찰 신고달사</title>
+      <link>https://www.milinjong.or.kr/pages/singodalsa.html</link>
+      <description>성주대재가 봉행되는 도량, 여주 신고달사를 안내합니다.</description>
+      <guid>https://www.milinjong.or.kr/pages/singodalsa.html</guid>
+      <pubDate>Mon, 13 Jul 2026 13:45:13 +0000</pubDate>
+    </item>
+  </channel>
+</rss>

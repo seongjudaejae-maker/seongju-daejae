@@ -1,4 +1,16 @@
 User-agent: *
 Allow: /
+Disallow: /admin/
 
-Sitemap: https://milinjong.or.kr/sitemap.xml
+# 네이버 검색로봇(Yeti)에 대한 명시적 허용.
+# 네이버는 구글(Googlebot)과 다른 크롤러를 쓰므로 따로 적어준다.
+User-agent: Yeti
+Allow: /
+Disallow: /admin/
+
+# 다음(카카오) 검색로봇
+User-agent: Daum
+Allow: /
+Disallow: /admin/
+
+Sitemap: https://www.milinjong.or.kr/sitemap.xml

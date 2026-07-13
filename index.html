@@ -9,9 +9,67 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&family=Noto+Serif+KR:wght@500;600;700&family=Gowun+Batang:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
+<!-- 파비콘.
+     구글은 rel="icon" 을 표준으로 인식한다. rel="shortcut icon" 은 구형 방식으로
+     함께 남겨 호환성을 유지한다. 구글은 48x48 이상 크기를 요구하며, 이 .ico 파일에는
+     16/32/48/64 px 이미지가 모두 들어 있다. -->
+<link rel="icon" href="https://www.milinjong.or.kr/favicon.ico" sizes="any">
 <link rel="shortcut icon" href="https://www.milinjong.or.kr/favicon.ico" type="image/x-icon">
-<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
-<link rel="icon" href="/favicon.ico" type="image/x-icon">
+<link rel="apple-touch-icon" href="https://www.milinjong.or.kr/apple-touch-icon.png">
+
+<!-- 검색결과에 "대한불교밀인종 · milinjong.or.kr" 형태로 사이트 이름이 노출되도록 하는 설정 -->
+<link rel="canonical" href="https://www.milinjong.or.kr/">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="대한불교밀인종">
+<meta property="og:title" content="대한불교밀인종">
+<meta property="og:description" content="대한불교밀인종 공식 홈페이지. 종조 무진당 도현대종사께서 세우신 밀인(密印)의 법풍을 이어 참선과 진언 수행을 하나로 잇는 심인선(心印禪)을 닦습니다.">
+<meta property="og:url" content="https://www.milinjong.or.kr/">
+<meta property="og:image" content="https://www.milinjong.or.kr/images/singodalsa-hero-1.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="ko_KR">
+
+<!-- ▼▼▼ 네이버 검색 등록용 (직접 값을 채워 넣으셔야 합니다) ▼▼▼
+     네이버 서치어드바이저(https://searchadvisor.naver.com)에 사이트를 등록하면
+     아래와 같은 형태의 소유확인 태그를 발급해 줍니다. 발급받은 태그를 그대로
+     복사해서 아래 주석을 지우고 붙여 넣으세요. 이 태그가 있어야 네이버가
+     사이트 소유자를 확인하고 검색결과에 수집하기 시작합니다.
+
+<meta name="naver-site-verification" content="여기에_발급받은_코드를_붙여넣으세요">
+     ▲▲▲ ---------------------------------------------------------- ▲▲▲ -->
+
+<!-- 구글이 사이트 이름을 인식하는 근거가 되는 구조화 데이터(WebSite).
+     검색결과 상단에 URL 대신 "대한불교밀인종"이 표시되게 하는 핵심 부분이다. -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "대한불교밀인종",
+  "alternateName": ["밀인종", "대한불교 밀인종", "Daehan Buddhism Milinjong"],
+  "url": "https://www.milinjong.or.kr/"
+}
+</script>
+
+<!-- 종단(단체) 정보. 검색결과 아이콘·지식패널의 근거가 된다. -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "대한불교밀인종",
+  "alternateName": "밀인종",
+  "url": "https://www.milinjong.or.kr/",
+  "logo": "https://www.milinjong.or.kr/images/logo.png",
+  "description": "종조 무진당 도현대종사께서 세우신 밀인(密印)의 법풍을 이어, 참선과 진언 수행을 하나로 잇는 심인선(心印禪)을 닦는 종단입니다.",
+  "address": {
+    "@type": "PostalAddress",
+    "addressCountry": "KR",
+    "addressRegion": "경기도",
+    "addressLocality": "여주시",
+    "streetAddress": "북내면 상교리 125"
+  }
+}
+</script>
 </head>
 <body>
 
@@ -100,7 +158,7 @@
     <div class="wrap">
       <p class="hero-kicker">DAEHAN BUDDHISM MILINJONG</p>
       <h1 class="hero-title">대한불교밀인종</h1>
-      <p class="hero-desc">마음으로 전하는 인(印)과 손으로 맺는 인(印)이<br>본디 둘이 아닙니다.</p>
+      <p class="hero-desc">마음으로 전하는 인(印)과 손으로 맺는 인(印)이<br class="br-wide">본디 둘이 아닙니다.</p>
       <div class="hero-actions">
         <a href="pages/jongdan-sogae.html" class="btn btn-primary">종단소개 알아보기</a>
       </div>
@@ -127,6 +185,7 @@
   <div class="wrap">
     <p class="eyebrow">FILM</p>
     <h2 class="section-title">여주 신고달사 와불 점안법회</h2>
+    <p class="section-lead">성주대재보존회와 봉행사찰 신고달사에서 봉행된 법회의 현장을 영상으로 전합니다.</p>
 
     <figure class="film-frame">
       <video
@@ -184,9 +243,9 @@
 <!-- ============ QUOTE / 큰스님말씀 미리보기 ============ -->
 <section class="section section-deep">
   <div class="wrap-narrow" style="text-align:center;">
-    <p class="eyebrow" style="justify-content:center;">큰스님 말씀</p>
+    <p class="eyebrow">큰스님 말씀</p>
     <h2 class="section-title">밝고 청정한 신심으로</h2>
-    <p style="font-family:var(--font-display); font-size:1.15rem; line-height:2; color:var(--ink);">
+    <p class="verse">
       분별하고 구하는 마음 없이 무심으로 기도하며<br>
       덕을 베푸는 것이 기쁨과 행복의 씨앗이니<br>
       자비롭게 일체를 살려 나감으로<br>
