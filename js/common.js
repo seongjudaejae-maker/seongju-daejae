@@ -68,7 +68,7 @@ document.addEventListener('DOMContentLoaded', function () {
     head.className = 'drawer-head';
     head.innerHTML =
       '<p class="drawer-greeting">대한불교밀인종</p>' +
-      '<p class="drawer-sub">밀인(密印)의 법풍을 오늘에 잇습니다.</p>' +
+      '<p class="drawer-sub">밀인(密因)의 법풍을 오늘에 잇습니다.</p>' +
       '<button type="button" class="drawer-close" aria-label="메뉴 닫기">' +
         '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">' +
           '<path d="M6 6L18 18M18 6L6 18"/>' +
@@ -295,6 +295,9 @@ document.addEventListener('DOMContentLoaded', function () {
   // 히어로 배경의 날씨 효과 — 눈 / 비 / 맑음(별빛) / 안개가 20초마다 자동으로 순환.
   // 페이지를 열 때마다 어떤 날씨로 시작할지는 무작위로 정해짐.
   var ambientCanvas = document.getElementById('hero-ambient-canvas');
+  // 캔버스 애니메이션 중단 제어용. 히어로가 화면 밖이거나 탭이 비활성이면 멈춘다.
+  var ambientActive = false;
+  var ambientRafId = null;
   if (ambientCanvas && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     var actx = ambientCanvas.getContext('2d');
     var aWidth, aHeight, aParticles = [];
@@ -347,8 +350,9 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function ambientDraw() {
+      if (!ambientActive) { ambientRafId = null; return; }
       if (!aWidth || !aHeight) {
-        requestAnimationFrame(ambientDraw);
+        ambientRafId = requestAnimationFrame(ambientDraw);
         return;
       }
       actx.clearRect(0, 0, aWidth, aHeight);
@@ -381,7 +385,7 @@ document.addEventListener('DOMContentLoaded', function () {
         actx.fillRect(0, 0, aWidth, aHeight);
       }
 
-      requestAnimationFrame(ambientDraw);
+      ambientRafId = requestAnimationFrame(ambientDraw);
     }
 
     function cycleWeather() {
@@ -407,8 +411,41 @@ document.addEventListener('DOMContentLoaded', function () {
       window.addEventListener('resize', ambientResize);
     }
 
+    // 히어로가 화면 밖으로 벗어나면 캔버스 애니메이션을 멈춘다.
+    // 그러지 않으면 눈/안개 입자가 보이지도 않는 채로 매 프레임 계속 그려지며,
+    // 아래쪽 영상 디코딩과 CPU를 다투어 스크롤이 끊기는 원인이 된다.
+    ambientActive = true;
     ambientDraw();
-    window.setInterval(cycleWeather, WEATHER_INTERVAL_MS);
+
+    var weatherTimer = window.setInterval(cycleWeather, WEATHER_INTERVAL_MS);
+
+    if ('IntersectionObserver' in window) {
+      var heroSection = document.querySelector('.hero');
+      if (heroSection) {
+        new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+              if (!ambientActive) {
+                ambientActive = true;
+                if (ambientRafId === null) ambientDraw();
+              }
+            } else {
+              ambientActive = false;   // 다음 프레임에서 스스로 멈춘다
+            }
+          });
+        }, { threshold: 0 }).observe(heroSection);
+      }
+    }
+
+    // 다른 탭으로 넘어갔을 때도 굳이 그릴 이유가 없다
+    document.addEventListener('visibilitychange', function () {
+      if (document.hidden) {
+        ambientActive = false;
+      } else if (!ambientActive) {
+        ambientActive = true;
+        if (ambientRafId === null) ambientDraw();
+      }
+    });
   }
 
 });
@@ -513,11 +550,26 @@ document.addEventListener('DOMContentLoaded', function () {
 (function () {
   var video = document.getElementById('feature-video');
   var soundBtn = document.getElementById('film-sound-btn');
+  var loading = document.getElementById('film-loading');
   if (!video) return;
 
   var userWantsSound = false;
 
+  // 아직 재생 가능할 만큼 받아지지 않았으면 로딩 표시를 보여준다.
+  // (poster 이미지만 덩그러니 멈춰 있으면 '고장난 것'처럼 보이기 때문)
+  function showLoading(on) {
+    if (loading) loading.classList.toggle('is-visible', !!on);
+  }
+  ['waiting', 'stalled'].forEach(function (ev) {
+    video.addEventListener(ev, function () { showLoading(true); });
+  });
+  ['playing', 'canplay', 'canplaythrough'].forEach(function (ev) {
+    video.addEventListener(ev, function () { showLoading(false); });
+  });
+
   function playVideo() {
+    // 아직 재생할 만큼 버퍼가 차지 않았다면 로딩 표시를 켠다
+    if (video.readyState < 3) showLoading(true);
     var p = video.play();
     if (p && typeof p.catch === 'function') {
       p.catch(function () {
@@ -566,8 +618,27 @@ document.addEventListener('DOMContentLoaded', function () {
           syncSoundBtn();
         }
       });
-    }, { threshold: 0.45 });
+    }, { threshold: 0.2 });   // 조금 더 일찍 반응하게(45% -> 20%)
     io.observe(video);
+
+    // ---- 미리 받아두기(warm-up) ----
+    // 영상이 화면에 닿는 순간에야 내려받기 시작하면, 첫 조각이 도착할 때까지
+    // 몇 초간 멈춰 있는 것처럼 보인다. 그래서 화면에 들어오기 한참 전
+    // (아래로 900px 남았을 때)부터 미리 버퍼를 채워 둔다. 스크롤이 도착했을 땐
+    // 이미 재생할 준비가 끝나 있다.
+    var warmUp = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          // HTML에는 preload="metadata"로 두어, 스크롤을 내리지 않는 방문자가
+          // 영상 11MB를 통째로 받는 낭비를 막는다. 영상이 가까워진 이 시점에
+          // 비로소 auto로 바꿔 본격적으로 버퍼를 채운다.
+          video.preload = 'auto';
+          video.load();
+          warmUp.disconnect();
+        }
+      });
+    }, { rootMargin: '900px 0px' });
+    warmUp.observe(video);
 
     // 화면에 다시 들어와 재생이 시작되면, 앞서 사용자가 켜 둔 소리 설정을 복원
     video.addEventListener('play', function () {
