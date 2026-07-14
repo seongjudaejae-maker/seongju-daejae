@@ -45,38 +45,28 @@
   --dur-base: 0.6s;
 
   /* ------------------------------------------------------------------
-     한지(韓紙) — 색을 바꾸지 않고, 지금의 색 위에 '종이의 물성'만 얹는다.
+     한지(韓紙) — 색은 그대로 두고, 그 위에 '종이의 물성'만 얹는다.
      실제 한지는 세 가지가 겹쳐 있다.
        1) 닥섬유(楮纖維) 가닥이 길게 흩어진 결
        2) 종이를 뜰 때 두께가 고르지 않아 생긴 얼룩덜룩한 농담(濃淡)
        3) 표면의 아주 미세한 알갱이
-     이 셋을 각각 한 겹씩 쌓는다. 한 겹만으로는 '노이즈'로 보이지만,
-     겹쳐 놓으면 비로소 '종이'가 된다.
+     한 겹만으로는 '노이즈'로 보이지만, 겹쳐 놓으면 비로소 '종이'가 된다.
      ------------------------------------------------------------------ */
 
   /* (1) 닥섬유 — 가로로 길게 늘인 난류로 섬유 가닥의 흐름을 만든다 */
-  --hanji-fiber: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='420' height='420'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.012 0.7' numOctaves='4' seed='7' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='420' height='420' filter='url(%23f)' opacity='0.09'/%3E%3C/svg%3E");
+  --hanji-fiber: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='420' height='420'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.012 0.7' numOctaves='4' seed='7' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='420' height='420' filter='url(%23f)' opacity='0.14'/%3E%3C/svg%3E");
 
   /* (3) 표면의 결 — 곱고 촘촘한 알갱이 */
-  --hanji-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23g)' opacity='0.055'/%3E%3C/svg%3E");
+  --hanji-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23g)' opacity='0.085'/%3E%3C/svg%3E");
 
-  /* (2) 농담 — 종이를 뜰 때 생긴 얼룩. 지금 쓰는 금동색/회갈색을 아주 옅게
-         번지게 해서, 배경이 '한 가지 색으로 칠한 면'이 아니라
-         '떠서 말린 종이 한 장'처럼 보이게 한다. */
+  /* (2) 농담 — 종이를 뜰 때 생긴 얼룩. 새 색을 들이지 않고, 이미 쓰는
+         금동색/단청색/회갈색을 옅게 번지게 한다. */
   --hanji-mottle:
-    radial-gradient(ellipse 62% 44% at 18% 12%, rgba(168, 145, 92, 0.09), transparent 62%),
-    radial-gradient(ellipse 54% 40% at 82% 26%, rgba(140, 47, 30, 0.035), transparent 60%),
-    radial-gradient(ellipse 70% 50% at 64% 78%, rgba(168, 145, 92, 0.075), transparent 64%),
-    radial-gradient(ellipse 48% 38% at 8% 68%, rgba(92, 86, 80, 0.05), transparent 60%),
-    radial-gradient(ellipse 58% 42% at 92% 92%, rgba(92, 86, 80, 0.04), transparent 62%);
-
-  /* 완성된 한지 표면 — 섬유 → 결 → 농담 순으로 겹친다 */
-  --hanji: var(--hanji-fiber), var(--hanji-grain), var(--hanji-mottle);
-
-  /* 각 겹의 크기. 농담 5겹의 주기를 일부러 서로 어긋나게 잡아
-     얼룩이 규칙적으로 반복되는 티가 나지 않도록 한다. */
-  --hanji-size: 420px 420px, 180px 180px,
-                900px 780px, 1300px 1100px, 1100px 960px, 760px 880px, 1500px 1200px;
+    radial-gradient(ellipse 62% 44% at 18% 12%, rgba(168, 145, 92, 0.13), transparent 62%),
+    radial-gradient(ellipse 54% 40% at 82% 26%, rgba(140, 47, 30, 0.05), transparent 60%),
+    radial-gradient(ellipse 70% 50% at 64% 78%, rgba(168, 145, 92, 0.11), transparent 64%),
+    radial-gradient(ellipse 48% 38% at 8% 68%, rgba(92, 86, 80, 0.07), transparent 60%),
+    radial-gradient(ellipse 58% 42% at 92% 92%, rgba(92, 86, 80, 0.06), transparent 62%);
 
   /* Elevation */
   --shadow-sm: 0 2px 8px rgba(28,26,24,0.06);
@@ -100,8 +90,6 @@ body {
   font-family: var(--font-body);
   color: var(--ink);
   background-color: var(--paper);
-  background-image: var(--hanji);
-  background-size: var(--hanji-size);
   line-height: 1.9;   /* 행간을 넓혀 글줄 사이에도 여백을 둔다 */
   font-size: 16px;
   -webkit-font-smoothing: antialiased;
@@ -204,8 +192,6 @@ textarea:focus-visible {
 
 .section-deep {
   background-color: var(--paper-deep);
-  background-image: var(--hanji);
-  background-size: var(--hanji-size);
 }
 
 /* Signature divider — stylized eave/dancheong motif line */
@@ -642,8 +628,6 @@ textarea:focus-visible {
   position: relative;
   z-index: 1;
   background-color: var(--paper);
-  background-image: var(--hanji);
-  background-size: var(--hanji-size);
   border-radius: 28px 28px 0 0;
   box-shadow: 0 -14px 28px rgba(28, 26, 24, 0.14);
   overflow: hidden; /* 내부 섹션의 배경색이 둥근 모서리 밖으로 새지 않도록 */
@@ -1653,4 +1637,45 @@ textarea:focus-visible {
 
 @media (prefers-reduced-motion: reduce) {
   .film-spinner { animation-duration: 3s; }
+}
+
+/* ==========================================================================
+   한지 — 화면 전체를 덮는 '종이 한 장'
+   --------------------------------------------------------------------------
+   [문제] 예전에는 body, 각 섹션, 콘텐츠 래퍼에 한지 무늬를 '각각' 그렸다.
+          요소마다 배경의 원점이 따로라서, 섹션이 바뀌는 경계에서 무늬가
+          처음부터 다시 시작됐다. 종이를 여러 조각으로 나눠 붙인 꼴이라
+          이음매가 타일처럼 눈에 띄었다.
+
+   [해법] 무늬를 요소에 붙이지 않고, 화면(뷰포트) 전체를 덮는 단 하나의 층으로
+          띄운다. 요소 경계라는 개념 자체가 사라지므로 이음매도 사라진다.
+
+          - position: fixed  → 화면에 고정된 '한 장'. 콘텐츠가 그 아래로 흐른다.
+                               (스크롤해도 종이가 다시 깔리지 않으니 반복 티도 없다)
+          - 얼룩(농담)은 no-repeat + cover → 아예 반복하지 않는다.
+          - pointer-events: none → 클릭을 가로막지 않는다.
+          - 정적인 고정 레이어라 스크롤할 때 다시 그리지 않는다. 성능 부담 없음.
+   ========================================================================== */
+
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  pointer-events: none;
+
+  background-image:
+    var(--hanji-fiber),
+    var(--hanji-grain),
+    var(--hanji-mottle);
+
+  /* 섬유와 결은 촘촘히 반복시키고, 큰 얼룩은 화면에 딱 한 번만 펼친다 */
+  background-size:
+    420px 420px,
+    180px 180px,
+    cover, cover, cover, cover, cover;
+  background-repeat:
+    repeat,
+    repeat,
+    no-repeat, no-repeat, no-repeat, no-repeat, no-repeat;
 }

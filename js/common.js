@@ -626,11 +626,46 @@ document.addEventListener('DOMContentLoaded', function () {
     // 몇 초간 멈춰 있는 것처럼 보인다. 그래서 화면에 들어오기 한참 전
     // (아래로 900px 남았을 때)부터 미리 버퍼를 채워 둔다. 스크롤이 도착했을 땐
     // 이미 재생할 준비가 끝나 있다.
+    // ---- 화질 고르기 (720p / 480p) ----
+    // 반드시 내려받기가 시작되기 '전에' 결정해야 한다. 다 받은 뒤에 바꾸면
+    // 앞서 받은 만큼이 통째로 버려진다.
+    function pickQuality() {
+      var src720 = video.getAttribute('data-src-720');
+      var src480 = video.getAttribute('data-src-480');
+      if (!src720 || !src480) return;
+
+      var use480 = false;
+
+      // (1) 작은 화면 — 영상이 표시되는 실제 폭이 좁으면 720p를 써도 그 화질을
+      //     다 보여주지 못한다. 굳이 큰 파일을 받을 이유가 없다.
+      var shownWidth = video.getBoundingClientRect().width || window.innerWidth;
+      if (shownWidth <= 640) use480 = true;
+
+      // (2) 데이터 절약 모드거나 회선이 느릴 때 — 화질보다 '끊기지 않는 것'이 우선
+      var conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+      if (conn) {
+        if (conn.saveData) use480 = true;
+        if (/(^|-)(2g|3g)$/.test(conn.effectiveType || '')) use480 = true;
+      }
+
+      var wanted = use480 ? src480 : src720;
+      var source = video.querySelector('source');
+      if (source && source.getAttribute('src') !== wanted) {
+        source.setAttribute('src', wanted);
+        // load()는 아래 warm-up에서 호출되므로 여기서는 src만 바꿔 둔다
+      }
+    }
+
+    // 영상이 화면에 닿는 순간에야 내려받기 시작하면, 첫 조각이 도착할 때까지
+    // 몇 초간 멈춰 있는 것처럼 보인다. 그래서 화면에 들어오기 한참 전
+    // (아래로 900px 남았을 때)부터 미리 버퍼를 채워 둔다. 스크롤이 도착했을 땐
+    // 이미 재생할 준비가 끝나 있다.
     var warmUp = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
         if (entry.isIntersecting) {
+          pickQuality();          // 받기 시작하기 직전에 화질을 확정한다
           // HTML에는 preload="metadata"로 두어, 스크롤을 내리지 않는 방문자가
-          // 영상 11MB를 통째로 받는 낭비를 막는다. 영상이 가까워진 이 시점에
+          // 영상을 통째로 받는 낭비를 막는다. 영상이 가까워진 이 시점에
           // 비로소 auto로 바꿔 본격적으로 버퍼를 채운다.
           video.preload = 'auto';
           video.load();

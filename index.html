@@ -195,8 +195,13 @@
         loop
         playsinline
         preload="metadata"
-        poster="images/feature-video-poster.jpg">
-        <source src="videos/seongju-video.mp4" type="video/mp4">
+        poster="images/feature-video-poster.jpg"
+        data-src-720="videos/seongju-video-720p.mp4"
+        data-src-480="videos/seongju-video-480p.mp4">
+        <!-- 기본값은 720p. JS가 화면 크기와 회선 상태를 보고,
+             작은 화면이거나 데이터 절약 모드면 480p로 바꿔 준다.
+             (JS가 꺼져 있어도 이 720p가 그대로 재생된다) -->
+        <source src="videos/seongju-video-720p.mp4" type="video/mp4">
         이 브라우저에서는 영상 재생을 지원하지 않습니다.
       </video>
 
