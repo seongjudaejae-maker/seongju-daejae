@@ -103,21 +103,30 @@ document.addEventListener('DOMContentLoaded', function () {
       var subNav = li.querySelector('.sub-nav');
       if (subNav) {
         // .sub-nav의 직계 항목만 훑는다. 항목이 3단계(예: 종조 > 사명당유정)를
-        // 가지고 있으면, 그 아래 .sub-nav-children 항목들을 들여쓴 항목으로
-        // 이어서 붙여 계층 구조가 드러나게 한다.
+        // 가지고 있으면, 그 3단계 항목들은 기본으로 접어 두고, 상위 항목을
+        // 눌렀을 때(펼침 버튼) 비로소 펼쳐지도록 접이식 그룹으로 만든다.
         subNav.querySelectorAll(':scope > li').forEach(function (subLi) {
           var topA = subLi.querySelector(':scope > a');
           if (!topA) return;
 
-          var item = document.createElement('li');
-          var link = document.createElement('a');
-          link.href = topA.getAttribute('href');
-          link.textContent = topA.textContent.trim();
-          item.appendChild(link);
-          ul.appendChild(item);
-
           var childList = subLi.querySelector('.sub-nav-children');
+
           if (childList) {
+            // ---- 하위(3단계) 항목이 있는 상위 항목 → 접이식 그룹 ----
+            var groupLi = document.createElement('li');
+            groupLi.className = 'drawer-group';
+
+            var toggleBtn = document.createElement('button');
+            toggleBtn.type = 'button';
+            toggleBtn.className = 'drawer-group-toggle';
+            toggleBtn.innerHTML =
+              '<span class="drawer-group-label"></span>' +
+              '<span class="drawer-group-caret" aria-hidden="true"></span>';
+            toggleBtn.querySelector('.drawer-group-label').textContent = topA.textContent.trim();
+            toggleBtn.setAttribute('aria-expanded', 'false');
+
+            var childUl = document.createElement('ul');
+            childUl.className = 'drawer-grandchildren';
             childList.querySelectorAll('a').forEach(function (childA) {
               var childItem = document.createElement('li');
               childItem.className = 'drawer-child-item';
@@ -125,8 +134,25 @@ document.addEventListener('DOMContentLoaded', function () {
               childLink.href = childA.getAttribute('href');
               childLink.textContent = childA.textContent.trim();
               childItem.appendChild(childLink);
-              ul.appendChild(childItem);
+              childUl.appendChild(childItem);
             });
+
+            toggleBtn.addEventListener('click', function () {
+              var open = groupLi.classList.toggle('is-open');
+              toggleBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+            });
+
+            groupLi.appendChild(toggleBtn);
+            groupLi.appendChild(childUl);
+            ul.appendChild(groupLi);
+          } else {
+            // ---- 하위 항목이 없는 상위 항목 → 그대로 링크(클릭 시 팝업) ----
+            var item = document.createElement('li');
+            var link = document.createElement('a');
+            link.href = topA.getAttribute('href');
+            link.textContent = topA.textContent.trim();
+            item.appendChild(link);
+            ul.appendChild(item);
           }
         });
       } else {
@@ -221,6 +247,27 @@ document.addEventListener('DOMContentLoaded', function () {
     if (window.innerWidth > 760 && drawer && drawer.classList.contains('is-open')) {
       closeDrawer();
     }
+  });
+
+  // ==========================================================================
+  // 데스크톱 소메뉴 — 3단계(하위하위) 항목은 접어 두고,
+  // 하위 항목을 가진 상위 항목(종조·소의경전·총무원 등)을 '클릭'하면 펼친다.
+  // (클릭 시 페이지 이동/"준비 중" 팝업 대신 펼침/접힘만 동작)
+  // ==========================================================================
+  document.querySelectorAll('.sub-nav-group > a').forEach(function (groupLink) {
+    groupLink.addEventListener('click', function (e) {
+      e.preventDefault();               // 문서 클릭 핸들러가 defaultPrevented로 건너뛴다
+      var group = groupLink.parentElement;
+      group.classList.toggle('is-open');
+    });
+  });
+  // 대메뉴에서 마우스가 완전히 벗어나 드롭다운이 닫히면 펼침 상태를 초기화한다.
+  document.querySelectorAll('.main-nav > li').forEach(function (topLi) {
+    topLi.addEventListener('mouseleave', function () {
+      topLi.querySelectorAll('.sub-nav-group.is-open').forEach(function (g) {
+        g.classList.remove('is-open');
+      });
+    });
   });
 
   // Video modal (used on 성주대재보존회 행사 page)

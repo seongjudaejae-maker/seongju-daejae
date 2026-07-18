@@ -30,14 +30,16 @@
 <meta property="og:image:height" content="630">
 <meta property="og:locale" content="ko_KR">
 
-<!-- ▼▼▼ 네이버 검색 등록용 (직접 값을 채워 넣으셔야 합니다) ▼▼▼
-     네이버 서치어드바이저(https://searchadvisor.naver.com)에 사이트를 등록하면
-     아래와 같은 형태의 소유확인 태그를 발급해 줍니다. 발급받은 태그를 그대로
-     복사해서 아래 주석을 지우고 붙여 넣으세요. 이 태그가 있어야 네이버가
-     사이트 소유자를 확인하고 검색결과에 수집하기 시작합니다.
+<!-- ▼▼▼ 네이버 검색 등록(소유확인) ▼▼▼
+     네이버 서치어드바이저(https://searchadvisor.naver.com) → [웹마스터 도구] →
+     사이트 등록 후 'HTML 태그' 방식을 고르면 아래와 같은 코드값을 발급해 줍니다.
+     그 값만 복사해서 아래 content="" 안의 안내 문구를 지우고 붙여 넣으세요.
+     (코드를 넣기 전까지는 이 태그를 그대로 두어도 사이트에 아무 문제가 없습니다.) -->
+<meta name="naver-site-verification" content="여기에_네이버에서_발급받은_코드를_붙여넣으세요">
 
-<meta name="naver-site-verification" content="여기에_발급받은_코드를_붙여넣으세요">
-     ▲▲▲ ---------------------------------------------------------- ▲▲▲ -->
+<!-- 구글 서치콘솔 소유확인도 같은 방식입니다. 필요하면 아래 태그의 content에
+     구글에서 발급받은 코드를 넣으세요. (선택 사항) -->
+<!-- <meta name="google-site-verification" content="여기에_구글에서_발급받은_코드"> -->
 
 <!-- 구글이 사이트 이름을 인식하는 근거가 되는 구조화 데이터(WebSite).
      검색결과 상단에 URL 대신 "대한불교밀인종"이 표시되게 하는 핵심 부분이다. -->
@@ -86,14 +88,14 @@
           <a href="pages/jongdan-sogae.html">종단소개</a>
           <ul class="sub-nav">
           <li class="sub-nav-group">
-            <a href="pages/jongjo.html">종조</a>
+            <a href="pages/jongjo.html">종조<span class="sub-caret" aria-hidden="true"></span></a>
             <ul class="sub-nav-children">
               <li><a href="pages/samyeongdang-yujeong.html">사명당유정</a></li>
             </ul>
           </li>
           <li><a href="pages/milinjong-sogae.html">밀인종</a></li>
           <li class="sub-nav-group">
-            <a href="pages/soui-gyeongjeon.html">소의경전</a>
+            <a href="pages/soui-gyeongjeon.html">소의경전<span class="sub-caret" aria-hidden="true"></span></a>
             <ul class="sub-nav-children">
               <li><a href="pages/neungeomgyeong.html">능엄경</a></li>
             </ul>
@@ -105,23 +107,22 @@
           <a href="pages/jojik-gigu.html">조직기구</a>
           <ul class="sub-nav">
           <li class="sub-nav-group">
-            <a href="pages/chongmuwon.html">총무원</a>
+            <a href="pages/chongmuwon.html">총무원<span class="sub-caret" aria-hidden="true"></span></a>
             <ul class="sub-nav-children">
               <li><a href="pages/chongmuwon-wonjang.html">총무원장</a></li>
               <li><a href="pages/samu-chongjang.html">사무총장</a></li>
               <li><a href="pages/sindo-hoejang.html">신도회장</a></li>
-              <li><a href="pages/ilbulhoe.html">일불회</a></li>
             </ul>
           </li>
           <li class="sub-nav-group">
-            <a href="pages/hanmaeum-seonwon.html">한마음선원</a>
+            <a href="pages/hanmaeum-seonwon.html">한마음선원<span class="sub-caret" aria-hidden="true"></span></a>
             <ul class="sub-nav-children">
               <li><a href="pages/bucheon-gallery.html">부천갤러리</a></li>
             </ul>
           </li>
           <li><a href="pages/milin-bulgyo-daehak.html">밀인불교대학</a></li>
           <li class="sub-nav-group">
-            <a href="pages/seongjudaejae-sogae.html">성주대재보존회</a>
+            <a href="pages/seongjudaejae-sogae.html">성주대재보존회<span class="sub-caret" aria-hidden="true"></span></a>
             <ul class="sub-nav-children">
               <li><a href="pages/geungnaksa.html">극락사</a></li>
               <li><a href="pages/yongmunsa.html">용문사</a></li>

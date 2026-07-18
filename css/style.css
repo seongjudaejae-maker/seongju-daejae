@@ -369,18 +369,47 @@ textarea:focus-visible {
   font-weight: 500;
 }
 
+/* 하위 항목을 가진 상위 소메뉴(종조·소의경전 등)에는 펼침 표시(▾)를 붙인다.
+   클릭하면 아래 3단계 항목이 펼쳐진다. */
+.sub-nav-group > a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  cursor: pointer;
+}
+/* 펼침 화살표 — 깔끔한 SVG 꺾쇠(∨). 클릭해 펼치면 위(∧)로 뒤집힌다. */
+.sub-caret {
+  display: inline-block;
+  width: 0.62em;
+  height: 0.62em;
+  flex-shrink: 0;
+  background: no-repeat center / contain;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' fill='none' stroke='%23A8915C' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2.75 4.5 L6 7.75 L9.25 4.5'/%3E%3C/svg%3E");
+  transition: transform 0.25s var(--ease-premium);
+}
+.sub-nav-group.is-open .sub-caret {
+  transform: rotate(180deg);
+}
+/* 펼쳐진(활성) 상위 항목은 단청색으로 표시해 지금 열려 있음을 나타낸다. */
+.sub-nav-group.is-open > a {
+  color: var(--danchong);
+}
+
 /* ---- 소메뉴 안의 3단계(맨 하위) 항목(예: 종조 > 사명당유정) ----
-   색이나 표식 없이, 상위 항목보다 작은 글씨와 아래 구분선만으로
-   하위 항목임을 은은하게 나타낸다. */
+   기본은 접혀 있고(display:none), 상위 항목을 클릭하면 펼쳐진다.
+   펼쳐졌을 때는 상위 항목보다 작은 글씨와 위쪽 구분선으로 하위임을 나타낸다. */
 .sub-nav-children {
   list-style: none;
   margin: 0.15rem 0 0;
   padding: 0.35rem 0 0;
-  display: flex;
+  display: none;               /* 기본 접힘 */
   flex-direction: column;
   align-items: center;
   gap: 0.05rem;
   border-top: 1px solid var(--line);
+}
+.sub-nav-group.is-open .sub-nav-children {
+  display: flex;               /* 클릭 시 펼침 */
 }
 .sub-nav-children li a {
   padding: 0.22rem 0;
@@ -1572,16 +1601,8 @@ textarea:focus-visible {
   color: var(--danchong);
   background: var(--paper);
 }
-/* 오른쪽 끝의 화살표(>) 표시 */
-.drawer-sub-panel a::after {
-  content: "";
-  width: 7px;
-  height: 7px;
-  flex-shrink: 0;
-  border-right: 1.5px solid var(--gold);
-  border-bottom: 1.5px solid var(--gold);
-  transform: rotate(-45deg);
-}
+/* 링크 항목(하위하위 메뉴가 없는 항목)에는 화살표(>)를 붙이지 않는다.
+   펼칠 것이 있는 상위 항목만 별도의 펼침 표시(∨)를 갖는다. */
 
 /* 3단계 항목(예: 종조 > 사명당유정) — 표식 없이, 들여쓰기(위치)로 하위임을
    나타내되, 글자를 조금 작고 살짝 연하게 하여 상위 항목과 은은히 구분한다.
@@ -1590,6 +1611,55 @@ textarea:focus-visible {
   padding-left: calc(var(--space-3) + 2.3rem);
   font-size: 0.93rem;
   color: var(--ink-soft);
+}
+
+/* ---- 모바일 접이식 그룹 ----
+   하위(3단계) 항목을 가진 상위 항목은 '펼침 버튼'으로 만든다. 기본은 접혀 있고,
+   버튼을 누르면 아래 3단계 항목이 펼쳐진다. 화살표(>) 대신 아래꺾쇠(▾)를 붙여
+   '누르면 펼쳐지는 항목'임을 나타내고, 펼치면 위로 뒤집힌다. */
+.drawer-group-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  width: 100%;
+  padding: 1.1rem var(--space-3);
+  font-family: var(--font-display);
+  font-size: 1.02rem;
+  font-weight: 600;
+  color: var(--ink);
+  text-align: left;
+  background: none;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  cursor: pointer;
+  transition: color 0.25s var(--ease-premium), background 0.25s var(--ease-premium);
+}
+.drawer-group-toggle:hover,
+.drawer-group-toggle:active {
+  color: var(--danchong);
+  background: var(--paper);
+}
+.drawer-group-caret {
+  width: 8px;
+  height: 8px;
+  flex-shrink: 0;
+  border-right: 1.5px solid var(--gold);
+  border-bottom: 1.5px solid var(--gold);
+  transform: translateY(-2px) rotate(45deg);
+  transition: transform 0.25s var(--ease-premium);
+}
+.drawer-group.is-open .drawer-group-caret {
+  transform: translateY(1px) rotate(225deg);
+}
+.drawer-grandchildren {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: none;              /* 기본 접힘 */
+}
+.drawer-group.is-open .drawer-grandchildren {
+  display: block;             /* 버튼을 누르면 펼침 */
 }
 
 /* ==========================================================================
