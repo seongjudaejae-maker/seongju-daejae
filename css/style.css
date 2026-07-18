@@ -54,19 +54,19 @@
      ------------------------------------------------------------------ */
 
   /* (1) 닥섬유 — 가로로 길게 늘인 난류로 섬유 가닥의 흐름을 만든다 */
-  --hanji-fiber: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='420' height='420'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.012 0.7' numOctaves='4' seed='7' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='420' height='420' filter='url(%23f)' opacity='0.14'/%3E%3C/svg%3E");
+  --hanji-fiber: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='420' height='420'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.012 0.7' numOctaves='4' seed='7' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='420' height='420' filter='url(%23f)' opacity='0.112'/%3E%3C/svg%3E");
 
   /* (3) 표면의 결 — 곱고 촘촘한 알갱이 */
-  --hanji-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23g)' opacity='0.085'/%3E%3C/svg%3E");
+  --hanji-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23g)' opacity='0.068'/%3E%3C/svg%3E");
 
   /* (2) 농담 — 종이를 뜰 때 생긴 얼룩. 새 색을 들이지 않고, 이미 쓰는
          금동색/단청색/회갈색을 옅게 번지게 한다. */
   --hanji-mottle:
-    radial-gradient(ellipse 62% 44% at 18% 12%, rgba(168, 145, 92, 0.13), transparent 62%),
-    radial-gradient(ellipse 54% 40% at 82% 26%, rgba(140, 47, 30, 0.05), transparent 60%),
-    radial-gradient(ellipse 70% 50% at 64% 78%, rgba(168, 145, 92, 0.11), transparent 64%),
-    radial-gradient(ellipse 48% 38% at 8% 68%, rgba(92, 86, 80, 0.07), transparent 60%),
-    radial-gradient(ellipse 58% 42% at 92% 92%, rgba(92, 86, 80, 0.06), transparent 62%);
+    radial-gradient(ellipse 62% 44% at 18% 12%, rgba(168, 145, 92, 0.104), transparent 62%),
+    radial-gradient(ellipse 54% 40% at 82% 26%, rgba(140, 47, 30, 0.04), transparent 60%),
+    radial-gradient(ellipse 70% 50% at 64% 78%, rgba(168, 145, 92, 0.088), transparent 64%),
+    radial-gradient(ellipse 48% 38% at 8% 68%, rgba(92, 86, 80, 0.056), transparent 60%),
+    radial-gradient(ellipse 58% 42% at 92% 92%, rgba(92, 86, 80, 0.048), transparent 62%);
 
   /* Elevation */
   --shadow-sm: 0 2px 8px rgba(28,26,24,0.06);
@@ -322,12 +322,15 @@ textarea:focus-visible {
 
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   gap: var(--space-5);
 }
-.sub-nav li {
+.sub-nav > li {
   margin: 0;
   padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 .main-nav > li:hover .sub-nav,
 .main-nav > li:focus-within .sub-nav {
@@ -357,6 +360,29 @@ textarea:focus-visible {
 }
 .sub-nav li a:hover::after {
   width: 100%;
+}
+
+/* ---- 소메뉴 안의 3단계 항목(예: 종조 > 사명당유정) ----
+   상위(종조·소의경전)와 하위(사명당유정·능엄경) 항목의 글자색·굵기를
+   나머지 소메뉴 항목과 동일하게 맞춘다. 계층은 아래쪽 구분선과
+   작은 글씨 크기만으로 은은하게 나타낸다. */
+.sub-nav-children {
+  list-style: none;
+  margin: 0.15rem 0 0;
+  padding: 0.35rem 0 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.05rem;
+  border-top: 1px solid var(--line);
+}
+.sub-nav-children li a {
+  padding: 0.22rem 0;
+  font-size: 0.8rem;
+  color: var(--ink);
+}
+.sub-nav-children li a:hover {
+  color: var(--danchong);
 }
 
 .nav-toggle {
@@ -642,7 +668,7 @@ textarea:focus-visible {
 
 .card-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: var(--space-5);
   margin-top: var(--space-6);
 }
@@ -745,7 +771,7 @@ textarea:focus-visible {
 }
 .footer-grid {
   display: grid;
-  grid-template-columns: 1.4fr 1fr 1fr;
+  grid-template-columns: 1.6fr 1fr 1fr 1fr;
   gap: var(--space-5);
   padding-bottom: var(--space-5);
   border-bottom: 1px solid rgba(245,241,232,0.14);
@@ -1551,6 +1577,19 @@ textarea:focus-visible {
   transform: rotate(-45deg);
 }
 
+/* 3단계 항목(예: 종조 > 사명당유정) — 색·굵기는 상위 항목과 동일하게 맞추고,
+   들여쓰기만으로 하위 항목임을 나타낸다. */
+.drawer-sub-panel li.drawer-child-item a {
+  padding-left: calc(var(--space-3) + 1rem);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+.drawer-sub-panel li.drawer-child-item a::after {
+  width: 5px;
+  height: 5px;
+}
+
 /* ==========================================================================
    일원상(一圓相) — 선가에서 깨달음을 나타내는 원.
    --------------------------------------------------------------------------
@@ -1640,28 +1679,32 @@ textarea:focus-visible {
 }
 
 /* ==========================================================================
-   한지 — 화면 전체를 덮는 '종이 한 장'
+   한지 — 콘텐츠(종이) 영역만 덮는 '종이 한 장'
    --------------------------------------------------------------------------
    [문제] 예전에는 body, 각 섹션, 콘텐츠 래퍼에 한지 무늬를 '각각' 그렸다.
           요소마다 배경의 원점이 따로라서, 섹션이 바뀌는 경계에서 무늬가
           처음부터 다시 시작됐다. 종이를 여러 조각으로 나눠 붙인 꼴이라
-          이음매가 타일처럼 눈에 띄었다.
+          이음매가 타일처럼 눈에 띄었다. 이후 화면 전체를 덮는 fixed 한 장으로
+          바꿨더니 이음매는 사라졌지만, 이번엔 사진·영상 위에까지 무늬가 덮여
+          매체가 탁하게 보였다.
 
-   [해법] 무늬를 요소에 붙이지 않고, 화면(뷰포트) 전체를 덮는 단 하나의 층으로
-          띄운다. 요소 경계라는 개념 자체가 사라지므로 이음매도 사라진다.
+   [해법] 무늬를 '한지(종이) 배경이 실제로 깔리는 영역'인 .page-body-overlay
+          안에만 한 장으로 띄운다. 이렇게 하면
+          - 히어로(사진)와 헤더에는 무늬가 닿지 않아 사진이 깨끗하게 보인다.
+          - 본문 콘텐츠(글·카드·푸터) 위에는 종이 질감이 그대로 얹힌다.
+          - 그리고 본문 안의 사진·영상만 무늬층 위로 끌어올려(z-index) 매체는
+            탁해지지 않고 선명하게 유지한다.
 
-          - position: fixed  → 화면에 고정된 '한 장'. 콘텐츠가 그 아래로 흐른다.
-                               (스크롤해도 종이가 다시 깔리지 않으니 반복 티도 없다)
+          - position: absolute + inset:0 → 오버레이 전체 높이를 한 장으로 덮는다.
           - 얼룩(농담)은 no-repeat + cover → 아예 반복하지 않는다.
           - pointer-events: none → 클릭을 가로막지 않는다.
-          - 정적인 고정 레이어라 스크롤할 때 다시 그리지 않는다. 성능 부담 없음.
    ========================================================================== */
 
-body::after {
+.page-body-overlay::after {
   content: "";
-  position: fixed;
+  position: absolute;
   inset: 0;
-  z-index: 9998;
+  z-index: 3;            /* 본문 글·카드 위에는 얹히고, 사진·영상(z:4) 아래에 둔다 */
   pointer-events: none;
 
   background-image:
@@ -1669,7 +1712,7 @@ body::after {
     var(--hanji-grain),
     var(--hanji-mottle);
 
-  /* 섬유와 결은 촘촘히 반복시키고, 큰 얼룩은 화면에 딱 한 번만 펼친다 */
+  /* 섬유와 결은 촘촘히 반복시키고, 큰 얼룩은 한 번만 펼친다 */
   background-size:
     420px 420px,
     180px 180px,
@@ -1678,4 +1721,12 @@ body::after {
     repeat,
     repeat,
     no-repeat, no-repeat, no-repeat, no-repeat, no-repeat;
+}
+
+/* 본문 속 사진·영상은 한지 무늬층(z:3) 위로 끌어올려 선명하게 유지한다.
+   (.page-body-overlay가 stacking context라 이 z-index는 그 안에서만 겨룬다) */
+.section-film .film-frame,
+.gallery-strip .g-item {
+  position: relative;
+  z-index: 4;
 }

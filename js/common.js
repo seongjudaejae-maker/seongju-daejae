@@ -102,13 +102,32 @@ document.addEventListener('DOMContentLoaded', function () {
       var ul = document.createElement('ul');
       var subNav = li.querySelector('.sub-nav');
       if (subNav) {
-        subNav.querySelectorAll('a').forEach(function (a) {
+        // .sub-nav의 직계 항목만 훑는다. 항목이 3단계(예: 종조 > 사명당유정)를
+        // 가지고 있으면, 그 아래 .sub-nav-children 항목들을 들여쓴 항목으로
+        // 이어서 붙여 계층 구조가 드러나게 한다.
+        subNav.querySelectorAll(':scope > li').forEach(function (subLi) {
+          var topA = subLi.querySelector(':scope > a');
+          if (!topA) return;
+
           var item = document.createElement('li');
           var link = document.createElement('a');
-          link.href = a.getAttribute('href');
-          link.textContent = a.textContent.trim();
+          link.href = topA.getAttribute('href');
+          link.textContent = topA.textContent.trim();
           item.appendChild(link);
           ul.appendChild(item);
+
+          var childList = subLi.querySelector('.sub-nav-children');
+          if (childList) {
+            childList.querySelectorAll('a').forEach(function (childA) {
+              var childItem = document.createElement('li');
+              childItem.className = 'drawer-child-item';
+              var childLink = document.createElement('a');
+              childLink.href = childA.getAttribute('href');
+              childLink.textContent = childA.textContent.trim();
+              childItem.appendChild(childLink);
+              ul.appendChild(childItem);
+            });
+          }
         });
       } else {
         // 하위메뉴가 없는 항목(봉행사찰 신고달사, 온라인민원)은
