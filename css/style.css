@@ -362,10 +362,16 @@ textarea:focus-visible {
   width: 100%;
 }
 
-/* ---- 소메뉴 안의 3단계 항목(예: 종조 > 사명당유정) ----
-   상위(종조·소의경전)와 하위(사명당유정·능엄경) 항목의 글자색·굵기를
-   나머지 소메뉴 항목과 동일하게 맞춘다. 계층은 아래쪽 구분선과
-   작은 글씨 크기만으로 은은하게 나타낸다. */
+/* 상위 소메뉴(종조·밀인종·소의경전·종단문장)는 조금 더 크고 또렷하게 —
+   맨 하위 항목과 크기 차이를 두어 계층이 분명히 드러나게 한다. */
+.sub-nav > li > a {
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+/* ---- 소메뉴 안의 3단계(맨 하위) 항목(예: 종조 > 사명당유정) ----
+   색이나 표식 없이, 상위 항목보다 작은 글씨와 아래 구분선만으로
+   하위 항목임을 은은하게 나타낸다. */
 .sub-nav-children {
   list-style: none;
   margin: 0.15rem 0 0;
@@ -1577,17 +1583,13 @@ textarea:focus-visible {
   transform: rotate(-45deg);
 }
 
-/* 3단계 항목(예: 종조 > 사명당유정) — 색·굵기는 상위 항목과 동일하게 맞추고,
-   들여쓰기만으로 하위 항목임을 나타낸다. */
+/* 3단계 항목(예: 종조 > 사명당유정) — 표식 없이, 들여쓰기(위치)로 하위임을
+   나타내되, 글자를 조금 작고 살짝 연하게 하여 상위 항목과 은은히 구분한다.
+   상위 항목보다 조금 더 오른쪽에 놓는다. */
 .drawer-sub-panel li.drawer-child-item a {
-  padding-left: calc(var(--space-3) + 1rem);
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: var(--ink);
-}
-.drawer-sub-panel li.drawer-child-item a::after {
-  width: 5px;
-  height: 5px;
+  padding-left: calc(var(--space-3) + 2.3rem);
+  font-size: 0.93rem;
+  color: var(--ink-soft);
 }
 
 /* ==========================================================================
