@@ -729,7 +729,7 @@ textarea:focus-visible {
 
 .card-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: var(--space-5);
   margin-top: var(--space-6);
 }
@@ -767,7 +767,7 @@ textarea:focus-visible {
 }
 .info-card h3 {
   font-size: 1.2rem;
-  margin: var(--space-2) 0 var(--space-1);
+  margin: 0 0 var(--space-1);
 }
 .info-card p {
   color: var(--ink-soft);
