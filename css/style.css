@@ -420,6 +420,32 @@ textarea:focus-visible {
   color: var(--danchong);
 }
 
+/* 4단계 하위그룹(예: 성주대재보존회 > 관련단체 > 일불회) —
+   '관련단체'는 링크가 아닌 작은 소제목으로 두고, 그 아래에 일불회를 얹는다. */
+.sub-nav-subgroup {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.1rem;
+  margin-top: 0.35rem;
+  padding-top: 0.3rem;
+  border-top: 1px dashed var(--line);
+}
+.sub-nav-sublabel {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--ink-faint);
+  letter-spacing: 0.02em;
+}
+.sub-nav-subchildren {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .nav-toggle {
   display: none;
   width: 44px;
@@ -1161,13 +1187,14 @@ textarea:focus-visible {
   opacity: 1;
   visibility: visible;
 }
+/* "준비 중입니다" 팝업 — 기존 대비 약 절반 크기로 축소 */
 .soon-modal-inner {
   width: 100%;
-  max-width: 320px;
+  max-width: 200px;
   background: var(--paper);
   border: 1px solid var(--line);
-  border-radius: 14px;
-  padding: var(--space-4) var(--space-3) var(--space-3);
+  border-radius: 10px;
+  padding: 1.2rem 0.9rem 0.9rem;
   text-align: center;
   box-shadow: var(--shadow-lg);
   transform: scale(0.92) translateY(10px);
@@ -1178,15 +1205,15 @@ textarea:focus-visible {
 }
 .soon-modal-msg {
   font-family: var(--font-display);
-  font-size: 1.15rem;
+  font-size: 0.9rem;
   font-weight: 600;
   color: var(--ink);
-  margin-bottom: var(--space-3);
+  margin-bottom: 0.85rem;
 }
 .soon-modal-close {
-  min-width: 84px;
-  padding: 0.6rem 1.25rem;
-  font-size: 0.68rem;
+  min-width: 58px;
+  padding: 0.38rem 0.8rem;
+  font-size: 0.58rem;
   border-radius: 999px;
   justify-content: center;
 }
@@ -1586,8 +1613,8 @@ textarea:focus-visible {
 .drawer-sub-panel a {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: var(--space-2);
+  justify-content: flex-start;
+  gap: 0;
   padding: 1.1rem var(--space-3);
   font-family: var(--font-display);
   font-size: 1.02rem;
@@ -1601,6 +1628,12 @@ textarea:focus-visible {
   color: var(--danchong);
   background: var(--paper);
 }
+/* 모바일 메뉴 항목 앞에 "-" 표식을 붙인다. */
+.drawer-sub-panel a::before {
+  content: "-";
+  margin-right: 0.5rem;
+  flex-shrink: 0;
+}
 /* 링크 항목(하위하위 메뉴가 없는 항목)에는 화살표(>)를 붙이지 않는다.
    펼칠 것이 있는 상위 항목만 별도의 펼침 표시(∨)를 갖는다. */
 
@@ -1611,6 +1644,19 @@ textarea:focus-visible {
   padding-left: calc(var(--space-3) + 2.3rem);
   font-size: 0.93rem;
   color: var(--ink-soft);
+}
+
+/* 4단계 하위그룹(예: 성주대재보존회 > 관련단체 > 일불회) ----
+   '관련단체'는 작은 소제목으로 두고, 그 아래 일불회는 한 단 더 들여쓴다. */
+.drawer-sub-panel li.drawer-subgroup-label {
+  padding: 0.75rem var(--space-3) 0.3rem calc(var(--space-3) + 2.3rem);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--ink-faint);
+}
+.drawer-sub-panel li.drawer-subgroup-item a {
+  padding-left: calc(var(--space-3) + 3.4rem);
 }
 
 /* ---- 모바일 접이식 그룹 ----
@@ -1639,6 +1685,11 @@ textarea:focus-visible {
 .drawer-group-toggle:active {
   color: var(--danchong);
   background: var(--paper);
+}
+/* 펼침 그룹(총무원·종조 등)의 이름 앞에도 "-" 표식을 붙인다. */
+.drawer-group-label::before {
+  content: "-";
+  margin-right: 0.5rem;
 }
 .drawer-group-caret {
   width: 8px;

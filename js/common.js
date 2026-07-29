@@ -127,14 +127,35 @@ document.addEventListener('DOMContentLoaded', function () {
 
             var childUl = document.createElement('ul');
             childUl.className = 'drawer-grandchildren';
-            childList.querySelectorAll('a').forEach(function (childA) {
-              var childItem = document.createElement('li');
-              childItem.className = 'drawer-child-item';
-              var childLink = document.createElement('a');
-              childLink.href = childA.getAttribute('href');
-              childLink.textContent = childA.textContent.trim();
-              childItem.appendChild(childLink);
-              childUl.appendChild(childItem);
+            childList.querySelectorAll(':scope > li').forEach(function (cLi) {
+              var subLabel = cLi.querySelector(':scope > .sub-nav-sublabel');
+              if (subLabel) {
+                // ---- 4단계 하위그룹(예: 관련단체 > 일불회) ----
+                // '관련단체'는 소제목으로, 그 아래 일불회는 한 단 더 들여쓴다.
+                var labelLi = document.createElement('li');
+                labelLi.className = 'drawer-subgroup-label';
+                labelLi.textContent = subLabel.textContent.trim();
+                childUl.appendChild(labelLi);
+                cLi.querySelectorAll('.sub-nav-subchildren a').forEach(function (gA) {
+                  var gItem = document.createElement('li');
+                  gItem.className = 'drawer-child-item drawer-subgroup-item';
+                  var gLink = document.createElement('a');
+                  gLink.href = gA.getAttribute('href');
+                  gLink.textContent = gA.textContent.trim();
+                  gItem.appendChild(gLink);
+                  childUl.appendChild(gItem);
+                });
+              } else {
+                var childA = cLi.querySelector(':scope > a');
+                if (!childA) return;
+                var childItem = document.createElement('li');
+                childItem.className = 'drawer-child-item';
+                var childLink = document.createElement('a');
+                childLink.href = childA.getAttribute('href');
+                childLink.textContent = childA.textContent.trim();
+                childItem.appendChild(childLink);
+                childUl.appendChild(childItem);
+              }
             });
 
             toggleBtn.addEventListener('click', function () {
