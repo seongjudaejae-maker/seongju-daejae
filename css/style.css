@@ -832,7 +832,7 @@ textarea:focus-visible {
 }
 .footer-grid {
   display: grid;
-  grid-template-columns: 1.6fr 1fr 1fr 1fr;
+  grid-template-columns: 1.6fr 1fr 1fr 1fr 1fr;
   gap: var(--space-5);
   padding-bottom: var(--space-5);
   border-bottom: 1px solid rgba(245,241,232,0.14);
