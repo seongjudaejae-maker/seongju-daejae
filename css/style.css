@@ -1070,7 +1070,13 @@ textarea:focus-visible {
   .profile-block:has(.profile-figure) { grid-template-columns: 1fr; }
   .profile-figure { max-width: 300px; margin: 0 auto; }
 }
-.samyeong-prose { margin-top: var(--space-5); }
+.wrap-narrow.samyeong-prose {
+  margin-top: var(--space-5);
+  /* 바깥 .wrap 이 이미 좌우 여백을 주므로 이중 여백을 없앤다 (데스크톱 글 폭은 그대로) */
+  padding-left: 0;
+  padding-right: 0;
+  max-width: calc(var(--content-narrow) - 2 * var(--space-4));
+}
 .doc-figure {
   /* 본문(.wrap-narrow) 글자 폭과 같게: 680px에서 좌우 여백을 뺀 폭 */
   max-width: calc(var(--content-narrow) - 2 * var(--space-4));
