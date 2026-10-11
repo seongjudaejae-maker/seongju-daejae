@@ -544,6 +544,13 @@ document.addEventListener('DOMContentLoaded', function () {
 (function () {
   var soonModal = null;
 
+  // 내용이 완성되어 공개한 페이지. 여기에 파일명을 추가하면 팝업 없이 바로 이동한다.
+  var READY_PAGES = [
+    'index.html',
+    'milinjong-sogae.html',
+    'samyeongdang-yujeong.html'
+  ];
+
   function ensureSoonModal() {
     if (soonModal) return soonModal;
     soonModal = document.createElement('div');
@@ -580,6 +587,8 @@ document.addEventListener('DOMContentLoaded', function () {
     if (/^https?:\/\//i.test(href) && href.indexOf('milinjong.or.kr') === -1) {
       return false;                                            // 외부 사이트 링크(지도, 참고 사이트 등)는 그대로 허용
     }
+    var fileName = href.split(/[?#]/)[0].split('/').pop();
+    if (READY_PAGES.indexOf(fileName) !== -1) return false;    // 공개된 페이지는 정상 이동
     return true;
   }
 
