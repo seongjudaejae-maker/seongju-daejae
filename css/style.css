@@ -1949,3 +1949,15 @@ textarea:focus-visible {
 /* 종단소개 글 페이지(밀인종 · 사명당유정 · 대불정수능엄경): 상단 제목 띠와 첫 문단 사이를 두 줄 정도로 좁힘 */
 .content-section.content-section-tight { padding-top: 3.5rem; }
 .content-section-tight > .wrap > .wrap-narrow.samyeong-prose:first-child { margin-top: 0; }
+
+/* 대불정수능엄경: 자료 사진과 위아래 글 사이를 한 줄 정도로 붙임 */
+.neungeom-page .doc-figure { margin-top: 0.25rem; }   /* 앞 문단 아래 여백(1.5rem)과 합쳐 약 1.75rem */
+.neungeom-page .doc-figure + .wrap-narrow.samyeong-prose { margin-top: 1.75rem; }
+
+/* 대불정수능엄경: 앞 내용과 다음 소제목 사이를 모두 세 줄 정도(약 5.5rem)로 통일 */
+.neungeom-page .prose h2,
+.neungeom-page .prose h3 { margin-top: 5.5rem; padding-top: 0; }        /* 앞 문단 아래 여백과는 겹쳐지므로 5.5rem 그대로 */
+.neungeom-page .prose h2 + h3 { margin-top: 0.75rem; }                    /* 큰 제목 바로 아래 작은 제목은 붙임 */
+.neungeom-page .prose h2:first-child,
+.neungeom-page .prose h3:first-child { margin-top: 0; }
+.neungeom-page .doc-figure + .wrap-narrow.samyeong-prose:has(> h2:first-child, > h3:first-child) { margin-top: 5.5rem; }
