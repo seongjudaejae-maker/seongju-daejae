@@ -551,7 +551,8 @@ document.addEventListener('DOMContentLoaded', function () {
     '',
     'index',
     'milinjong-sogae',
-    'samyeongdang-yujeong'
+    'samyeongdang-yujeong',
+    'neungeomgyeong'
   ];
 
   function ensureSoonModal() {

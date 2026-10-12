@@ -1089,6 +1089,22 @@ textarea:focus-visible {
 }
 .doc-figure-lineage { max-width: 640px; }
 .doc-figure-lineage img { background: var(--white); }
+/* 세로로 긴 자료 사진은 너무 커지지 않게 */
+.doc-figure-portrait { max-width: 560px; }
+/* 공공누리 사진의 출처 표시 */
+.figure-credit {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 0.75rem;
+  color: var(--stone);
+}
+/* 소의경전(대불정수능엄경) 본문의 소제목 */
+.prose h3 {
+  font-size: 1.15rem;
+  margin: var(--space-4) 0 var(--space-2);
+  color: var(--ink);
+}
+.prose h3:first-child { margin-top: 0; }
 .sect-list {
   margin: var(--space-3) 0 var(--space-4);
   border-top: 1px solid var(--line);
@@ -1919,3 +1935,17 @@ textarea:focus-visible {
   position: relative;
   z-index: 4;
 }
+
+/* 종단소개 글 페이지(밀인종 · 사명당유정 · 대불정수능엄경)의 소제목을 본문과 확실히 구분 */
+.doc-page .prose h2 {
+  font-size: 1.65rem;   /* 1.5rem의 110% */
+  font-weight: 700;
+}
+.doc-page .prose h3 {
+  font-size: 1.265rem;  /* 1.15rem의 110% */
+  font-weight: 700;
+}
+
+/* 종단소개 글 페이지(밀인종 · 사명당유정 · 대불정수능엄경): 상단 제목 띠와 첫 문단 사이를 두 줄 정도로 좁힘 */
+.content-section.content-section-tight { padding-top: 3.5rem; }
+.content-section-tight > .wrap > .wrap-narrow.samyeong-prose:first-child { margin-top: 0; }
