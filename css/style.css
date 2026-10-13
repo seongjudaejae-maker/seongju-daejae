@@ -2011,8 +2011,18 @@ textarea:focus-visible {
 
 /* 총무원장 소개 — 사진 옆에 이름과 이력 목록 (휴대폰에서도 나란히) */
 .profile-figure img { height: auto; }
-.profile-block:has(.wonjang-prose) { grid-template-columns: 280px 1fr; gap: 3rem; align-items: center; }
-.profile-block .wonjang-figure { margin: 0; }
+.profile-block:has(.wonjang-prose) { grid-template-columns: 280px 1fr; gap: 3rem; align-items: stretch; }
+/* 사진 높이를 글(이름 윗선 ~ 마지막 줄)에 맞춤: 사진은 칸을 채우고 넘치는 부분은 잘라 냄 */
+.profile-block .wonjang-figure { position: relative; margin: 0; }
+.profile-block .wonjang-figure img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 40%;
+}
+.wj-list li:last-child { margin-bottom: 0; }
 .doc-page .wonjang-prose h2 {
   font-size: 1.9rem;
   margin: 0 0 1.2rem;
