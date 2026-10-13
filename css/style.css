@@ -1091,6 +1091,9 @@ textarea:focus-visible {
 .doc-figure-lineage img { background: var(--white); }
 /* 세로로 긴 자료 사진은 너무 커지지 않게 */
 .doc-figure-portrait { max-width: 560px; }
+/* 불화 · 작은 자료 사진은 원본보다 커지지 않게 */
+.doc-figure-narrow { max-width: 440px; }
+.doc-figure img { height: auto; }
 /* 공공누리 사진의 출처 표시 */
 .figure-credit {
   display: block;
@@ -1961,3 +1964,82 @@ textarea:focus-visible {
 .neungeom-page .prose h2:first-child,
 .neungeom-page .prose h3:first-child { margin-top: 0; }
 .neungeom-page .doc-figure + .wrap-narrow.samyeong-prose:has(> h2:first-child, > h3:first-child) { margin-top: 5.5rem; }
+
+/* ==========================================================================
+   종단문장 — 문장 이미지 목록 + 원본 다운로드 버튼
+   ========================================================================== */
+.munjang-group + .munjang-group {
+  margin-top: var(--space-4);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--line);
+}
+.munjang-item { margin: 0; }
+.munjang-item + .munjang-item { margin-top: 2rem; }
+.munjang-item img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--line);
+}
+.munjang-item figcaption {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-top: 0.6rem;
+}
+.btn-download {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--ink);
+  border: 1px solid var(--ink);
+  transition: background 0.3s var(--ease-premium), color 0.3s var(--ease-premium),
+              border-color 0.3s var(--ease-premium);
+}
+.btn-download:hover {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+/* 사진만 차례로 보여 주는 페이지(일불회 등) */
+.photo-list > .doc-figure:first-child { margin-top: 0; }
+.photo-list > .doc-figure + .doc-figure { margin-top: 2rem; }
+.photo-list .doc-figure img { height: auto; }
+
+/* 총무원장 소개 — 사진 옆에 이름과 이력 목록 (휴대폰에서도 나란히) */
+.profile-figure img { height: auto; }
+.profile-block:has(.wonjang-prose) { grid-template-columns: 280px 1fr; gap: 3rem; align-items: center; }
+.profile-block .wonjang-figure { margin: 0; }
+.doc-page .wonjang-prose h2 {
+  font-size: 1.9rem;
+  margin: 0 0 1.2rem;
+  padding: 0 0 0.9rem;
+  border-bottom: 1px solid var(--gold);
+}
+.wj-list { list-style: none; margin: 0; padding: 0; }
+.wj-list li {
+  position: relative;
+  padding-left: 1.4rem;
+  margin-bottom: 0.65rem;
+  font-size: 1.05rem;
+  font-weight: 500;
+  line-height: 1.6;
+}
+.wj-list li::before {
+  content: "◆";
+  position: absolute;
+  left: 0;
+  top: 0.1em;
+  font-size: 0.7em;
+  color: var(--gold);
+}
+.wj-list li.wj-strong { font-weight: 700; }
+@media (max-width: 760px) {
+  .profile-block:has(.wonjang-prose) { grid-template-columns: 38% 1fr; gap: 1.1rem; }
+  .profile-block .wonjang-figure { max-width: none; margin: 0; }
+  .doc-page .wonjang-prose h2 { font-size: 1.2rem; padding-bottom: 0.5rem; margin-bottom: 0.7rem; }
+  .wj-list li { font-size: 0.86rem; padding-left: 1.05rem; margin-bottom: 0.35rem; line-height: 1.5; }
+}
