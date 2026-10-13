@@ -2009,34 +2009,34 @@ textarea:focus-visible {
 .photo-list > .doc-figure + .doc-figure { margin-top: 2rem; }
 .photo-list .doc-figure img { height: auto; }
 
-/* 총무원장 소개 — 사진 옆에 이름과 이력 목록 (휴대폰에서도 나란히) */
+/* 총무원장 소개 — 사진은 원본 비율 그대로 두고, 글(이름 윗선 ~ 마지막 줄)을 사진 높이에 맞춰 고르게 벌림 */
 .profile-figure img { height: auto; }
 .profile-block:has(.wonjang-prose) { grid-template-columns: 280px 1fr; gap: 3rem; align-items: stretch; }
-/* 사진 높이를 글(이름 윗선 ~ 마지막 줄)에 맞춤: 사진은 칸을 채우고 넘치는 부분은 잘라 냄 */
-.profile-block .wonjang-figure { position: relative; margin: 0; }
-.profile-block .wonjang-figure img {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center 40%;
-}
-.wj-list li:last-child { margin-bottom: 0; }
+.profile-block .wonjang-figure { margin: 0; }
+/* 글 칸은 가장 긴 줄(대한불교 밀인종 총무원장) 폭만큼만 — 이름 아래 금색 줄도 그 길이로 */
+.wonjang-prose { display: flex; flex-direction: column; width: fit-content; }
 .doc-page .wonjang-prose h2 {
-  font-size: 1.9rem;
+  font-size: 2.1rem;
+  line-height: 1.15;
   margin: 0 0 1.2rem;
   padding: 0 0 0.9rem;
   border-bottom: 1px solid var(--gold);
 }
-.wj-list { list-style: none; margin: 0; padding: 0; }
+.wj-list {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
 .wj-list li {
   position: relative;
   padding-left: 1.4rem;
-  margin-bottom: 0.65rem;
-  font-size: 1.05rem;
+  font-size: 1.3rem;
   font-weight: 500;
-  line-height: 1.6;
+  line-height: 1.5;
 }
 .wj-list li::before {
   content: "◆";
@@ -2048,8 +2048,13 @@ textarea:focus-visible {
 }
 .wj-list li.wj-strong { font-weight: 700; }
 @media (max-width: 760px) {
-  .profile-block:has(.wonjang-prose) { grid-template-columns: 38% 1fr; gap: 1.1rem; }
+  .profile-block:has(.wonjang-prose) { grid-template-columns: 42% 1fr; gap: 0.9rem; }
   .profile-block .wonjang-figure { max-width: none; margin: 0; }
-  .doc-page .wonjang-prose h2 { font-size: 1.2rem; padding-bottom: 0.5rem; margin-bottom: 0.7rem; }
-  .wj-list li { font-size: 0.86rem; padding-left: 1.05rem; margin-bottom: 0.35rem; line-height: 1.5; }
+  /* 글자 크기를 화면 폭에 비례시켜, 어느 휴대폰에서도 글 높이 = 사진 높이, 가장 긴 줄 = 남은 폭이 되도록 */
+  .doc-page .wonjang-prose h2 { font-size: min(4.9vw, 1.75rem); padding-bottom: 0.35rem; margin-bottom: 0.4rem; }
+  .wj-list li { font-size: min(3.5vw, 1.25rem); padding-left: 0.95rem; line-height: 1.32; }
+}
+@media (min-width: 350px) and (max-width: 760px) {
+  .doc-page .wonjang-prose h2 { font-size: min(5.15vw, 1.75rem); }
+  .wj-list li { font-size: min(3.7vw, 1.25rem); }
 }
