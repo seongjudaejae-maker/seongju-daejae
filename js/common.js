@@ -552,7 +552,12 @@ document.addEventListener('DOMContentLoaded', function () {
     'index',
     'milinjong-sogae',
     'samyeongdang-yujeong',
-    'neungeomgyeong'
+    'neungeomgyeong',
+    'jongdan-munjang',
+    'ilbulhoe',
+    'chongmuwon-wonjang',
+    'cheonsu-daebiju',
+    'neungeom-sinju'
   ];
 
   function ensureSoonModal() {
@@ -586,6 +591,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (!href) return false;
     if (anchor.classList.contains('brand')) return false;      // 좌측 상단 로고(홈으로 이동)는 정상 동작
     if (href.charAt(0) === '#') return false;                 // 같은 페이지 내 앵커
+    if (anchor.hasAttribute('download')) return false;        // 파일 다운로드 링크(종단문장 원본 등)
     if (href.indexOf('mailto:') === 0) return false;
     if (href.indexOf('tel:') === 0) return false;
     if (/^https?:\/\//i.test(href) && href.indexOf('milinjong.or.kr') === -1) {
