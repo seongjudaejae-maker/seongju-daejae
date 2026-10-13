@@ -2048,13 +2048,14 @@ textarea:focus-visible {
 }
 .wj-list li.wj-strong { font-weight: 700; }
 @media (max-width: 760px) {
-  .profile-block:has(.wonjang-prose) { grid-template-columns: 42% 1fr; gap: 0.9rem; }
+  /* 좌우 여백을 10px만 남기고 넓혀 쓰고, 사진·글자는 그 폭에 비례해 함께 키움 — 어느 휴대폰에서도 글 높이 = 사진 높이 */
+  .profile-block:has(.wonjang-prose) { grid-template-columns: 43% 1fr; gap: 0.6rem; margin: 0 calc(10px - var(--space-3)); }
   .profile-block .wonjang-figure { max-width: none; margin: 0; }
-  /* 글자 크기를 화면 폭에 비례시켜, 어느 휴대폰에서도 글 높이 = 사진 높이, 가장 긴 줄 = 남은 폭이 되도록 */
-  .doc-page .wonjang-prose h2 { font-size: min(4.9vw, 1.75rem); padding-bottom: 0.35rem; margin-bottom: 0.4rem; }
-  .wj-list li { font-size: min(3.5vw, 1.25rem); padding-left: 0.95rem; line-height: 1.32; }
+  .doc-page .wonjang-prose h2 { font-size: min(calc((100vw - 20px) * 0.0632), 1.75rem); padding-bottom: 0.35rem; margin-bottom: 0.4rem; }
+  .wj-list li { font-size: min(calc((100vw - 20px) * 0.0455), 1.25rem); padding-left: 0.95rem; line-height: 1.24; }
 }
-@media (min-width: 350px) and (max-width: 760px) {
-  .doc-page .wonjang-prose h2 { font-size: min(5.15vw, 1.75rem); }
-  .wj-list li { font-size: min(3.7vw, 1.25rem); }
+@media (min-width: 360px) and (max-width: 760px) {
+  /* 360px 이상 휴대폰은 글자를 한 단계 더 키워 오른쪽 여백을 약 10px로 */
+  .doc-page .wonjang-prose h2 { font-size: min(calc((100vw - 20px) * 0.0646), 1.75rem); }
+  .wj-list li { font-size: min(calc((100vw - 20px) * 0.0465), 1.25rem); }
 }
