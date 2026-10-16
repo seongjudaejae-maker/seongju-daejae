@@ -557,7 +557,8 @@ document.addEventListener('DOMContentLoaded', function () {
     'ilbulhoe',
     'chongmuwon-wonjang',
     'cheonsu-daebiju',
-    'neungeom-sinju'
+    'neungeom-sinju',
+    'jongdan-gallery'
   ];
 
   function ensureSoonModal() {

@@ -6,16 +6,6 @@
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://www.milinjong.or.kr/pages/jongdan-sogae.html</loc>
-    <lastmod>2026-07-18</lastmod>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://www.milinjong.or.kr/pages/jongjo.html</loc>
-    <lastmod>2026-07-18</lastmod>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://www.milinjong.or.kr/pages/samyeongdang-yujeong.html</loc>
     <lastmod>2026-10-11</lastmod>
     <priority>0.7</priority>
@@ -23,11 +13,6 @@
   <url>
     <loc>https://www.milinjong.or.kr/pages/milinjong-sogae.html</loc>
     <lastmod>2026-10-11</lastmod>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://www.milinjong.or.kr/pages/soui-gyeongjeon.html</loc>
-    <lastmod>2026-07-18</lastmod>
     <priority>0.7</priority>
   </url>
   <url>
@@ -51,63 +36,8 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.milinjong.or.kr/pages/jojik-gigu.html</loc>
-    <lastmod>2026-07-18</lastmod>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://www.milinjong.or.kr/pages/chongmuwon.html</loc>
-    <lastmod>2026-07-18</lastmod>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://www.milinjong.or.kr/pages/chongmuwon-wonjang.html</loc>
     <lastmod>2026-10-13</lastmod>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://www.milinjong.or.kr/pages/samu-chongjang.html</loc>
-    <lastmod>2026-07-18</lastmod>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://www.milinjong.or.kr/pages/sindo-hoejang.html</loc>
-    <lastmod>2026-07-18</lastmod>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://www.milinjong.or.kr/pages/hanmaeum-seonwon.html</loc>
-    <lastmod>2026-07-18</lastmod>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://www.milinjong.or.kr/pages/bucheon-gallery.html</loc>
-    <lastmod>2026-07-18</lastmod>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://www.milinjong.or.kr/pages/milin-bulgyo-daehak.html</loc>
-    <lastmod>2026-07-18</lastmod>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://www.milinjong.or.kr/pages/seongjudaejae-sogae.html</loc>
-    <lastmod>2026-07-18</lastmod>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://www.milinjong.or.kr/pages/geungnaksa.html</loc>
-    <lastmod>2026-07-18</lastmod>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://www.milinjong.or.kr/pages/yongmunsa.html</loc>
-    <lastmod>2026-07-18</lastmod>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://www.milinjong.or.kr/pages/singodalsa.html</loc>
-    <lastmod>2026-07-18</lastmod>
     <priority>0.7</priority>
   </url>
   <url>
@@ -116,23 +46,8 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.milinjong.or.kr/pages/jongmu-haengjeong.html</loc>
-    <lastmod>2026-07-18</lastmod>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://www.milinjong.or.kr/pages/gongji-sahang.html</loc>
-    <lastmod>2026-07-18</lastmod>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://www.milinjong.or.kr/pages/jongdan-sosik.html</loc>
-    <lastmod>2026-07-18</lastmod>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://www.milinjong.or.kr/pages/jongdan-gallery.html</loc>
-    <lastmod>2026-07-18</lastmod>
-    <priority>0.7</priority>
+    <lastmod>2026-10-16</lastmod>
+    <priority>0.6</priority>
   </url>
 </urlset>
