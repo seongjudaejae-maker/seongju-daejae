@@ -1,0 +1,119 @@
+backend:
+  name: git-gateway
+  branch: main
+
+# Netlify Identity + Git Gateway를 사용하면 별도 OAuth 앱 설정 없이
+# Netlify 대시보드 > Identity 메뉴에서 사용자를 초대하는 것만으로 로그인이 가능합니다.
+
+media_folder: "images"      # 업로드한 이미지가 저장되는 위치 (저장소 루트 기준)
+public_folder: "/images"    # 페이지에서 이미지를 참조할 때 사용하는 경로
+
+locale: "ko"
+
+collections:
+
+  # ── 1. 메인 페이지 히어로 / 갤러리 이미지 ──────────────────────────────
+  - name: "home"
+    label: "메인 페이지"
+    files:
+      - name: "home_settings"
+        label: "메인 화면 설정"
+        file: "data/home.json"
+        fields:
+          - { label: "헤로 이미지(전체 화면 사진)", name: "hero_image", widget: "image" }
+          - { label: "헤로 제목", name: "hero_title", widget: "string", default: "천년을 이어온 기도, 성주대재의 정신을 지킵니다" }
+          - { label: "헤로 설명문", name: "hero_desc", widget: "text" }
+          - label: "신고달사 사계 갤러리 (5장)"
+            name: "gallery"
+            widget: "list"
+            max: 5
+            fields:
+              - { label: "이미지", name: "image", widget: "image" }
+              - { label: "설명(대체 텍스트)", name: "alt", widget: "string", required: false }
+
+  # ── 2. 종단소식 - 큰스님 말씀 (여러 건 등록 가능) ───────────────────────
+  - name: "keunsnim"
+    label: "큰스님 말씀"
+    folder: "data/keunsnim"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    fields:
+      - { label: "제목", name: "title", widget: "string" }
+      - { label: "구분(예: 신년 법문)", name: "category", widget: "string", required: false }
+      - { label: "날짜", name: "date", widget: "datetime" }
+      - { label: "본문", name: "body", widget: "text" }
+
+  # ── 3. 성주대재보존회 행사 영상 게시판 ─────────────────────────────────
+  - name: "videos"
+    label: "성주대재보존회 행사 영상"
+    folder: "data/videos"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    fields:
+      - { label: "영상 제목", name: "title", widget: "string" }
+      - { label: "유튜브 영상 ID 또는 URL", name: "youtube_id", widget: "string", hint: "예: https://youtu.be/ABCD1234 에서 ABCD1234 부분만 입력하거나 전체 URL을 붙여넣으세요." }
+      - { label: "행사 날짜", name: "date", widget: "datetime" }
+      - { label: "설명(선택)", name: "description", widget: "text", required: false }
+
+  # ── 3-1. 포교소식 게시판 (관리자만 작성 가능) ───────────────────────────
+  # ※ Netlify Identity에서 "Editor" 권한으로 초대된 사용자만 이 게시판 글을
+  #    작성·수정할 수 있도록 admin/config.yml 상단에 권한 설정을 추가하시면 됩니다.
+  - name: "pogyo"
+    label: "포교소식"
+    folder: "data/pogyo"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    fields:
+      - { label: "제목", name: "title", widget: "string" }
+      - { label: "날짜", name: "date", widget: "datetime" }
+      - { label: "본문", name: "body", widget: "text" }
+      - { label: "첨부 이미지(선택)", name: "image", widget: "image", required: false }
+
+  # ── 4. 신고달사 페이지 - 사진/소개/주소 ───────────────────────────────
+  - name: "singodalsa"
+    label: "신고달사 페이지"
+    files:
+      - name: "singodalsa_settings"
+        label: "신고달사 정보"
+        file: "data/singodalsa.json"
+        fields:
+          - { label: "소개글", name: "intro", widget: "text" }
+          - { label: "주소", name: "address", widget: "string", default: "경기도 여주시 북내면 상교리 125" }
+          - label: "전경 사진 (5장)"
+            name: "photos"
+            widget: "list"
+            max: 5
+            fields:
+              - { label: "이미지", name: "image", widget: "image" }
+              - { label: "설명(대체 텍스트)", name: "alt", widget: "string", required: false }
+
+  # ── 5. 종단 페이지 텍스트 ────────────────────────────────────────────
+  - name: "pages"
+    label: "종단 소개 페이지 글"
+    files:
+      - name: "jongdan_sogae"
+        label: "종단소개 밀인종"
+        file: "data/jongdan-sogae.json"
+        fields:
+          - { label: "본문(HTML 가능)", name: "body", widget: "text" }
+      - name: "chongmuwon_insamal"
+        label: "총무원장 인사말"
+        file: "data/chongmuwon-insamal.json"
+        fields:
+          - { label: "본문(HTML 가능)", name: "body", widget: "text" }
+      - name: "chongmuwon_wonjang"
+        label: "총무원장 소개(이력)"
+        file: "data/chongmuwon-wonjang.json"
+        fields:
+          - { label: "사진", name: "photo", widget: "image", required: false }
+          - label: "이력 목록"
+            name: "career"
+            widget: "list"
+            fields:
+              - { label: "연도(또는 점)", name: "year", widget: "string" }
+              - { label: "내용", name: "text", widget: "string" }
+      - name: "seongjudaejae_sogae"
+        label: "성주대재보존회 소개"
+        file: "data/seongjudaejae-sogae.json"
+        fields:
+          - { label: "본문(HTML 가능)", name: "body", widget: "text" }
