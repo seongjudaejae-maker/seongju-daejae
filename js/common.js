@@ -560,7 +560,8 @@ document.addEventListener('DOMContentLoaded', function () {
     'neungeom-sinju',
     'singodalsa',
     'yongmunsa',
-    'suamsa'
+    'suamsa',
+    'jongdan-gallery'
   ];
 
   function ensureSoonModal() {
