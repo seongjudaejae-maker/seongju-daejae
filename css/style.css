@@ -2019,6 +2019,20 @@ textarea:focus-visible {
   border-bottom: 1px solid var(--line);
 }
 .gallery-grid + .gallery-group-title { margin-top: 3.5rem; }
+
+/* 사찰 페이지 유튜브 영상 — 소리 끈 채 자동 재생, 본문 폭 16:9 */
+.video-embed { position: relative; display: block; aspect-ratio: 16 / 9; background: var(--ink); overflow: hidden; }
+.video-embed iframe, .video-embed img { width: 100%; height: 100%; border: 0; object-fit: cover; display: block; }
+.video-embed + .video-embed { margin-top: 1.5rem; }
+.video-embed + .gallery-group-title { margin-top: 3.5rem; }
+/* 퍼가기가 막힌 영상 — 미리보기 그림을 누르면 유튜브로 이동 */
+.video-link-label {
+  position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+  padding: 0.7rem 1.4rem; border-radius: 999px;
+  background: rgba(20,18,16,0.72); color: #fff; font-weight: 600; font-size: 0.95rem;
+  transition: background 0.3s var(--ease-premium);
+}
+.video-link:hover .video-link-label { background: #c4302b; }
 .gallery-grid {
   list-style: none;
   margin: 0;

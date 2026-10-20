@@ -558,7 +558,9 @@ document.addEventListener('DOMContentLoaded', function () {
     'chongmuwon-wonjang',
     'cheonsu-daebiju',
     'neungeom-sinju',
-    'singodalsa'
+    'singodalsa',
+    'yongmunsa',
+    'suamsa'
   ];
 
   function ensureSoonModal() {
@@ -569,7 +571,7 @@ document.addEventListener('DOMContentLoaded', function () {
     soonModal.setAttribute('aria-modal', 'true');
     soonModal.innerHTML =
       '<div class="soon-modal-inner">' +
-        '<p class="soon-modal-msg">준비 중입니다.</p>' +
+        '<p class="soon-modal-msg">접근권한 없음</p>' +
         '<button type="button" class="btn btn-primary soon-modal-close">확인</button>' +
       '</div>';
     document.body.appendChild(soonModal);
